@@ -1482,7 +1482,7 @@
         // =========================================================
         function renderTab4Report() {
             const baseTbody = document.getElementById('t4-baseline-tbody');
-            baseTbody.innerHTML = pm25SafeHTML(baselineList.map(item => `
+            baseTbody.innerHTML = pm25SafeTableRows(baselineList.map(item => `
                 <tr class="border-b border-slate-300 align-top print-break-inside-avoid">
                     <td class="border border-slate-300 p-2 font-bold text-navy-950">${item.code}<br><span class="text-[11px] font-normal text-slate-500">(${item.progress}%)</span></td>
                     <td class="border border-slate-300 p-2">
@@ -1504,7 +1504,7 @@
             `).join(''));
 
             const addTbody = document.getElementById('t4-additional-tbody');
-            addTbody.innerHTML = pm25SafeHTML(additionalList.map((item, idx) => {
+            addTbody.innerHTML = pm25SafeTableRows(additionalList.map((item, idx) => {
                 const meta = getCategoryMeta(item.category);
                 return `
                     <tr class="border-b border-slate-300 align-top print-break-inside-avoid">
