@@ -1,0 +1,1874 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบติดตามการดำเนินการตามข้อเสนอแนะของ กสม. ต่อการแก้ไขปัญหาฝุ่น PM2.5</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Bai Jamjuree -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: {
+                            50: '#f0f4fa',
+                            100: '#dce6f5',
+                            200: '#b9cceb',
+                            600: '#1d4ed8',
+                            700: '#1e40af',
+                            800: '#172e6e',
+                            900: '#0f1f4b',
+                            950: '#091330',
+                        },
+                        gold: {
+                            50: '#fffbeb',
+                            100: '#fef3c7',
+                            200: '#fde68a',
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                            700: '#b45309',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Bai Jamjuree', 'sans-serif'],
+                        heading: ['Bai Jamjuree', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Bai Jamjuree', sans-serif;
+            background-color: #f8fafc;
+            color: #0f172a;
+        }
+        h1, h2, h3, h4, .font-heading {
+            font-family: 'Bai Jamjuree', sans-serif;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            body {
+                background-color: #ffffff !important;
+            }
+            .print-break-inside-avoid {
+                break-inside: avoid;
+            }
+        }
+        /* Readable, consistent typography and clearer interaction states */
+        html { scroll-behavior: smooth; }
+        body, button, input, select, textarea { font-family: 'Bai Jamjuree', sans-serif; }
+        body { line-height: 1.65; }
+        h1, h2, h3, h4 { line-height: 1.35; letter-spacing: 0; }
+        button, a, input, select, textarea { -webkit-tap-highlight-color: transparent; }
+        button { min-height: 40px; }
+        :focus-visible { outline: 3px solid #f59e0b; outline-offset: 2px; }
+        input, select, textarea { font-size: 16px !important; }
+        main { max-width: 88rem; }
+        .tab-nav-btn { min-height: 48px; }
+        table th, table td { padding: .7rem .8rem; line-height: 1.6; vertical-align: top; }
+        @media (max-width: 640px) {
+            header > div:first-child { align-items: flex-start; }
+            main { padding-top: 1rem; }
+            .tab-nav-btn { padding: .75rem 1rem; }
+        }
+    </style>
+<link rel="stylesheet" href="design.css"></head>
+<body data-mode="admin" class="min-h-screen flex flex-col">
+
+    <!-- Top Header -->
+    <header class="bg-navy-900 text-white shadow-lg sticky top-0 z-30 no-print border-b border-navy-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-wrap justify-between items-center gap-4">
+            <div class="flex items-center space-x-3.5">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center text-navy-950 font-bold text-2xl shadow-md shrink-0">
+                    <i class="fa-solid fa-scale-balanced"></i>
+                </div>
+                <div>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <span class="bg-gold-500 text-navy-950 text-xs font-bold px-2.5 py-0.5 rounded-md uppercase tracking-wide">กสม. (NHRCT)</span>
+                        <span class="text-xs text-blue-200 font-medium">ระบบติดตามการดำเนินการตามข้อเสนอแนะและจัดทำข้อเสนอแนะเพิ่มเติม</span>
+                    </div>
+                    <h1 class="text-xl sm:text-2xl font-bold tracking-wide text-white leading-tight mt-0.5">
+                        ติดตามข้อเสนอแนะ • ฝุ่น PM<sub>2.5</sub>
+                    </h1>
+                </div>
+            </div>
+
+            <div class="flex items-center flex-wrap gap-2">
+                <button onclick="openAdditionalModal('reiterated')" class="bg-gold-500 hover:bg-gold-400 text-navy-950 font-bold px-3.5 py-2 rounded-lg text-xs sm:text-sm transition flex items-center gap-1.5 shadow-sm">
+                    <i class="fa-solid fa-plus-circle"></i>
+                    <span>เพิ่มข้อเสนอแนะใหม่ / ย้ำของเดิม</span>
+                </button>
+                <button onclick="exportAllToCSV()" class="bg-navy-800 hover:bg-navy-700 text-white border border-navy-600 px-3 py-2 rounded-lg text-xs sm:text-sm transition flex items-center gap-1.5" title="ส่งออกข้อมูลทั้งหมดเป็นไฟล์ CSV สำหรับเปิดใน Excel">
+                    <i class="fa-solid fa-file-csv text-emerald-400"></i>
+                    <span>ส่งออก CSV</span>
+                </button>
+                <button onclick="resetSystemData()" class="bg-navy-950 hover:bg-rose-900 text-blue-200 hover:text-white border border-navy-700 px-3 py-2 rounded-lg text-xs sm:text-sm transition flex items-center gap-1.5" title="คืนค่าข้อมูลเริ่มต้นจากเอกสารทั้ง 6 ฉบับ">
+                    <i class="fa-solid fa-rotate-left"></i>
+                    <span class="hidden md:inline">คืนค่าเริ่มต้น</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="mode-link no-print"><strong>จัดการเนื้อหา</strong><a href="pm2_5.html">ดูหน้าสำหรับอ่าน ↗</a></div><!-- 4 Main Navigation Tabs -->
+        <div class="bg-navy-950/90 border-t border-navy-800">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex overflow-x-auto space-x-1">
+                <button onclick="switchTab('tab1')" id="btn-tab1" class="tab-nav-btn px-4 py-3 text-sm font-semibold border-b-3 border-gold-400 text-gold-400 bg-navy-900/60 flex items-center gap-2 whitespace-nowrap transition">
+                    <i class="fa-solid fa-list-check"></i>
+                    <span>ภาพรวมและการติดตาม</span>
+                    <span id="nav-badge-base" class="bg-navy-800 text-gold-400 border border-gold-500/40 text-xs px-2 py-0.5 rounded-full">14</span>
+                </button>
+                <button onclick="switchTab('tab2')" id="btn-tab2" class="tab-nav-btn px-4 py-3 text-sm font-semibold border-b-3 border-transparent text-blue-200 hover:text-white flex items-center gap-2 whitespace-nowrap transition">
+                    <i class="fa-solid fa-building-columns"></i>
+                    <span>ข้อมูลรายหน่วยงาน</span>
+                    <span class="bg-navy-800 text-blue-200 text-xs px-2 py-0.5 rounded-full">14 กระทรวง/หน่วยงาน</span>
+                </button>
+                <button onclick="switchTab('tab3')" id="btn-tab3" class="tab-nav-btn px-4 py-3 text-sm font-semibold border-b-3 border-transparent text-blue-200 hover:text-white flex items-center gap-2 whitespace-nowrap transition">
+                    <i class="fa-solid fa-lightbulb"></i>
+                    <span>ข้อเสนอแนะเพิ่มเติม</span>
+                    <span id="nav-badge-add" class="bg-gold-500 text-navy-950 font-bold text-xs px-2 py-0.5 rounded-full">24</span>
+                </button>
+                <button onclick="switchTab('tab4')" id="btn-tab4" class="tab-nav-btn px-4 py-3 text-sm font-semibold border-b-3 border-transparent text-blue-200 hover:text-white flex items-center gap-2 whitespace-nowrap transition">
+                    <i class="fa-solid fa-file-signature"></i>
+                    <span>รายงานและส่งออก</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <details class="sources no-print"><summary>เอกสารอ้างอิงและที่มาของข้อมูล · 6 ฉบับ</summary><div class="document-list"><a class="document-link" href="%E0%B8%82%E0%B9%89%E0%B8%AD%E0%B9%80%E0%B8%AA%E0%B8%99%E0%B8%AD%E0%B9%81%E0%B8%99%E0%B8%B0%E0%B8%81%E0%B8%A3%E0%B8%93%E0%B8%B5%E0%B8%9B%E0%B8%B1%E0%B8%8D%E0%B8%AB%E0%B8%B2%E0%B8%A1%E0%B8%A5%E0%B8%A0%E0%B8%B2%E0%B8%A7%E0%B8%B0%E0%B8%97%E0%B8%B2%E0%B8%87%E0%B8%AD%E0%B8%B2%E0%B8%81%E0%B8%B2%E0%B8%A8%E0%B9%83%E0%B8%99%E0%B8%9E%E0%B8%B7%E0%B9%89%E0%B8%99%E0%B8%97%E0%B8%B5%E0%B9%88%208%20%E0%B8%88%E0%B8%B1%E0%B8%87%E0%B8%AB%E0%B8%A7%E0%B8%B1%E0%B8%94%E0%B8%A0%E0%B8%B2%E0%B8%84%E0%B9%80%E0%B8%AB%E0%B8%99%E0%B8%B7%E0%B8%AD%E0%B8%95%E0%B8%AD%E0%B8%99%E0%B8%9A%E0%B8%99.pdf" target="_blank" rel="noopener"><span class="document-number">1</span><span>ข้อเสนอแนะกรณีปัญหามลภาวะทางอากาศในพื้นที่ 8 จังหวัดภาคเหนือตอนบน</span><span class="document-type">PDF ↗</span></a><a class="document-link" href="2.%20%E0%B8%AA%E0%B8%A3%E0%B8%B8%E0%B8%9B%E0%B8%95%E0%B8%B4%E0%B8%94%E0%B8%95%E0%B8%B2%E0%B8%A1%E0%B8%82%E0%B9%89%E0%B8%AD%E0%B9%80%E0%B8%AA%E0%B8%99%E0%B8%AD%E0%B8%9D%E0%B8%B8%E0%B9%88%E0%B8%99%E0%B8%A0%E0%B8%B2%E0%B8%84%E0%B9%80%E0%B8%AB%E0%B8%99%E0%B8%B7%E0%B8%AD%20%E0%B8%9B%E0%B8%B5%2066.pdf" target="_blank" rel="noopener"><span class="document-number">2</span><span>สรุปติดตามข้อเสนอฝุ่นภาคเหนือ ปี 66</span><span class="document-type">PDF ↗</span></a><a class="document-link" href="%E0%B8%AB%E0%B8%99%E0%B8%B1%E0%B8%87%E0%B8%AA%E0%B8%B7%E0%B8%AD%E0%B8%82%E0%B9%89%E0%B8%AD%E0%B9%80%E0%B8%AA%E0%B8%99%E0%B8%AD%E0%B9%80%E0%B9%80%E0%B8%99%E0%B8%B0%20%E0%B8%9B%E0%B8%B5%202568.pdf" target="_blank" rel="noopener"><span class="document-number">3</span><span>หนังสือข้อเสนอเเนะ ปี 2568</span><span class="document-type">PDF ↗</span></a><a class="document-link" href="%E0%B8%AA%E0%B8%A3%E0%B8%B8%E0%B8%9B%E0%B8%9C%E0%B8%A5%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%94%E0%B8%B3%E0%B9%80%E0%B8%99%E0%B8%B4%E0%B8%99%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%82%E0%B9%89%E0%B8%AD%E0%B9%80%E0%B8%AA%E0%B8%99%E0%B8%AD%E0%B9%81%E0%B8%99%E0%B8%B0%E0%B8%9B%E0%B8%B5%2068.pdf" target="_blank" rel="noopener"><span class="document-number">4</span><span>สรุปผลการดำเนินการข้อเสนอแนะปี 68</span><span class="document-type">PDF ↗</span></a><a class="document-link" href="%E0%B8%A3%E0%B8%B2%E0%B8%A2%E0%B8%87%E0%B8%B2%E0%B8%99%E0%B8%AA%E0%B8%A3%E0%B8%B8%E0%B8%9B%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B9%80%E0%B8%AA%E0%B8%A7%E0%B8%99%E0%B8%B2%E0%B8%A7%E0%B8%B4%E0%B8%81%E0%B8%A4%E0%B8%95%E0%B8%9D%E0%B8%B8%E0%B9%88%E0%B8%99%20PM2.5%20%E0%B9%81%E0%B8%A5%E0%B8%B0%E0%B8%81%E0%B8%8E%E0%B8%AB%E0%B8%A1%E0%B8%B2%E0%B8%A2%E0%B8%AD%E0%B8%B2%E0%B8%81%E0%B8%B2%E0%B8%A8%E0%B8%AA%E0%B8%B0%E0%B8%AD%E0%B8%B2%E0%B8%94.pdf" target="_blank" rel="noopener"><span class="document-number">5</span><span>รายงานสรุปการเสวนาวิกฤตฝุ่น PM2.5 และกฎหมายอากาศสะอาด</span><span class="document-type">PDF ↗</span></a><a class="document-link" href="%E0%B8%AA%E0%B8%A3%E0%B8%B8%E0%B8%9B%E0%B8%AA%E0%B8%B2%E0%B8%A3%E0%B8%B0%E0%B8%AA%E0%B8%B3%E0%B8%84%E0%B8%B1%E0%B8%8D%E0%B9%80%E0%B8%A7%E0%B8%97%E0%B8%B5%E0%B8%96%E0%B8%AD%E0%B8%94%E0%B8%9A%E0%B8%97%E0%B9%80%E0%B8%A3%E0%B8%B5%E0%B8%A2%E0%B8%99%E0%B9%80%E0%B8%8A%E0%B8%B5%E0%B8%A2%E0%B8%87%E0%B9%83%E0%B8%AB%E0%B8%A1%E0%B9%88.pdf" target="_blank" rel="noopener"><span class="document-number">6</span><span>สรุปสาระสำคัญเวทีถอดบทเรียนเชียงใหม่</span><span class="document-type">PDF ↗</span></a></div></details>
+    <!-- Main Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        <!-- =========================================================
+             TAB 1: OVERVIEW & BASELINE TRACKING (2566 & 2568)
+        ========================================================== -->
+        <section id="section-tab1" class="space-y-6">
+            <div class="page-intro"><p class="eyebrow">อากาศสะอาด เป็นสิทธิของทุกคน</p><h2>จัดการข้อมูลและความคืบหน้า</h2><p>เลือกข้อเสนอแนะเพื่ออัปเดตผลการดำเนินงาน หรือเพิ่มข้อเสนอแนะใหม่</p></div><!-- Top 4 Summary Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <!-- Card 1 -->
+                <div class="bg-white rounded-xl p-4 shadow-sm border-l-4 border-l-navy-800 border border-slate-200">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-xs font-bold uppercase tracking-wider text-slate-500">ข้อเสนอแนะตั้งต้นทั้งหมด</p>
+                            <h3 id="kpi-base-total" class="text-3xl font-bold text-navy-900 mt-1">14 ข้อ</h3>
+                        </div>
+                        <div class="w-10 h-10 rounded-lg bg-navy-50 text-navy-800 flex items-center justify-center text-lg">
+                            <i class="fa-solid fa-folder-tree"></i>
+                        </div>
+                    </div>
+                    <div class="mt-3 pt-2 border-t border-slate-100 flex justify-between text-xs text-slate-600">
+                        <span>ปี 2568 (ระดับประเทศ): <strong>11 ข้อ</strong></span>
+                        <span>ปี 2566 (ภาคเหนือ): <strong>3 ข้อ</strong></span>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="bg-white rounded-xl p-4 shadow-sm border-l-4 border-l-emerald-600 border border-slate-200">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-xs font-bold uppercase tracking-wider text-emerald-700">ดำเนินการแล้วบางส่วน / ก้าวหน้า</p>
+                            <h3 id="kpi-base-done" class="text-3xl font-bold text-emerald-600 mt-1">11 ข้อ</h3>
+                        </div>
+                        <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg">
+                            <i class="fa-solid fa-clipboard-check"></i>
+                        </div>
+                    </div>
+                    <div class="mt-3 pt-2 border-t border-slate-100 text-xs text-slate-600">
+                        มีรายงานผลจาก ทส. และ 12 กระทรวงต่อ ครม. แต่ยังมีช่องว่างในระดับพื้นที่
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="bg-white rounded-xl p-4 shadow-sm border-l-4 border-l-rose-600 border border-slate-200">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-xs font-bold uppercase tracking-wider text-rose-700">ติดคอขวดสำคัญ / ประเด็นคงค้าง</p>
+                            <h3 id="kpi-base-gaps" class="text-3xl font-bold text-rose-600 mt-1">45 ประเด็น</h3>
+                        </div>
+                        <div class="w-10 h-10 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center text-lg">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                        </div>
+                    </div>
+                    <div class="mt-3 pt-2 border-t border-slate-100 text-xs text-rose-700 font-medium">
+                        เช่น งบ อปท. หลักหมื่นบาท, ไร่หมุนเวียน/คทช., พิกัดดาวเทียมไม่ตรงกัน, กองทุนสุขภาพตำบล
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="bg-gradient-to-br from-navy-900 to-navy-800 text-white rounded-xl p-4 shadow-sm border-l-4 border-l-gold-400">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-xs font-bold uppercase tracking-wider text-gold-400">ข้อเสนอแนะฉบับเพิ่มเติม (ปี 2569)</p>
+                            <h3 id="kpi-add-total" class="text-3xl font-bold text-white mt-1">24 ข้อ</h3>
+                        </div>
+                        <div class="w-10 h-10 rounded-lg bg-white/10 text-gold-400 flex items-center justify-center text-lg">
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </div>
+                    </div>
+                    <div class="mt-3 pt-2 border-t border-navy-700 flex justify-between text-xs text-blue-100">
+                        <span>ย้ำของเดิม: <strong id="kpi-add-reit" class="text-gold-400">5</strong></span>
+                        <span>5 เสาหลักใหม่: <strong id="kpi-add-new" class="text-emerald-300">15</strong></span>
+                        <span>หยุดทำทันที: <strong id="kpi-add-stop" class="text-rose-300">4</strong></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filter & Search Bar for Tab 1 -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+                    <div class="lg:col-span-2">
+                        <label class="block text-xs font-bold text-navy-900 mb-1">ค้นหาคำสำคัญ (ข้อเสนอแนะ, สิ่งที่ทำแล้ว, ช่องว่างหน้างาน)</label>
+                        <div class="relative">
+                            <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-sm"></i>
+                            <input type="text" id="t1-search" oninput="renderTab1Baseline()" placeholder="เช่น อปท., ไร่หมุนเวียน, คทช., CEMS, EURO 6, 240 บาท, กองทุนสุขภาพ..." class="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-navy-700 focus:bg-white">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-navy-900 mb-1">ชุดข้อเสนอแนะ</label>
+                        <select id="t1-year" onchange="renderTab1Baseline()" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-navy-700">
+                            <option value="all">ทั้งหมด (14 ข้อ: ปี 2568 & 2566)</option>
+                            <option value="2568">ปี 2568 (สม 0701/63 - 11 ข้อหลัก)</option>
+                            <option value="2566">ปี 2566 (สม 0701/43 ภาคเหนือ - 3 ข้อหลัก)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-navy-900 mb-1">กระทรวง/หน่วยงานรับผิดชอบ</label>
+                        <select id="t1-agency" onchange="renderTab1Baseline()" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-navy-700">
+                            <option value="all">ทุกหน่วยงาน</option>
+                            <option value="ทส.">ทส. (ทรัพยากรธรรมชาติฯ / คพ. / ป่าไม้ / อุทยานฯ)</option>
+                            <option value="มท.">มท. (มหาดไทย / ปภ. / สถ. / อปท.)</option>
+                            <option value="กษ.">กษ. (เกษตรและสหกรณ์)</option>
+                            <option value="อต.">อต. (อุตสาหกรรม / กรอ. / สอน. / สมอ.)</option>
+                            <option value="คค.">คค. (คมนาคม / ขบ.)</option>
+                            <option value="ดศ.">ดศ. (ดิจิทัลฯ / อุตุฯ / สขญ.)</option>
+                            <option value="พน.">พน. (พลังงาน)</option>
+                            <option value="สธ.">สธ. (สาธารณสุข / สปสช.)</option>
+                            <option value="ศธ.">ศธ. (ศึกษาธิการ)</option>
+                            <option value="พม.">พม. (พัฒนาสังคมฯ)</option>
+                            <option value="กต.">กต. (การต่างประเทศ)</option>
+                            <option value="พณ.">พณ. (พาณิชย์)</option>
+                            <option value="ก.พ.ร.">ก.พ.ร. / สงป. / กค. / คทช.</option>
+                            <option value="ครม.">รัฐบาล / ครม. / รัฐสภา</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-navy-900 mb-1">สถานะการดำเนินการ</label>
+                        <select id="t1-status" onchange="renderTab1Baseline()" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-navy-700">
+                            <option value="all">ทุกสถานะ</option>
+                            <option value="good">ก้าวหน้าชัดเจน (แต่ต้องขยายผล)</option>
+                            <option value="partial">ดำเนินการบางส่วน (มีช่องว่างสำคัญ)</option>
+                            <option value="bottleneck">ติดคอขวดเชิงโครงสร้าง / ต้องย้ำเร่งด่วน</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Baseline Cards Container -->
+            <div id="t1-baseline-list" class="space-y-5">
+                <!-- Populated by JS -->
+            </div>
+        </section>
+
+        <!-- =========================================================
+             TAB 2: AGENCY MATRIX (ตรวจสอบรายหน่วยงาน)
+        ========================================================== -->
+        <section id="section-tab2" class="space-y-6 hidden">
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+                    <div>
+                        <h2 class="text-xl font-bold text-navy-900 flex items-center gap-2">
+                            <i class="fa-solid fa-building-shield text-gold-500"></i>
+                            ตารางตรวจสอบภารกิจรายกระทรวงและหน่วยงาน (Agency Accountability Matrix)
+                        </h2>
+                        <p class="text-xs sm:text-sm text-slate-600 mt-0.5">
+                            คลิกเลือกหน่วยงานด้านล่างเพื่อตรวจสอบว่าหน่วยงานนั้นรับผิดชอบข้อเสนอแนะใดบ้าง ดำเนินการอะไรไปแล้ว และยังมีช่องว่างใดที่ต้องเสนอแนะย้ำหรือเพิ่มเติมในปี 2569
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Agency Selector Pills -->
+                <div id="t2-agency-pills" class="flex flex-wrap gap-2 mt-4">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+            <!-- Selected Agency Detail Container -->
+            <div id="t2-agency-detail" class="space-y-5">
+                <!-- Populated by JS -->
+            </div>
+        </section>
+
+        <!-- =========================================================
+             TAB 3: ADDITIONAL PROPOSALS 2569 (ย้ำของเดิม + 5 เสาหลัก + สิ่งที่ต้องหยุดทำ)
+        ========================================================== -->
+        <section id="section-tab3" class="space-y-6 hidden">
+            <!-- Banner -->
+            <div class="bg-gradient-to-r from-navy-950 via-navy-900 to-navy-800 rounded-2xl p-6 text-white shadow-md border border-navy-700">
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                    <div class="space-y-1.5">
+                        <div class="inline-flex items-center gap-2 bg-gold-500/20 text-gold-400 border border-gold-400/30 text-xs font-bold px-3 py-1 rounded-full">
+                            <i class="fa-solid fa-star"></i> ข้อเสนอแนะฉบับเพิ่มเติม พ.ศ. 2569 (จากเวทีเสวนา 6 พ.ค. 69 และเวทีถอดบทเรียน มช. 15-16 ก.ย. 69)
+                        </div>
+                        <h2 class="text-2xl font-bold text-white">
+                            ข้อเสนอแนะฉบับเพิ่มเติม
+                        </h2>
+                        <p class="text-xs sm:text-sm text-blue-100 max-w-4xl leading-relaxed">
+                            สังเคราะห์จากข้อค้นพบหน้างานและข้อเสนอเชิงนโยบายที่ส่งมอบต่อรองนายกรัฐมนตรี (ศ.ดร.ยศชนัน วงศ์สวัสดิ์) และหน่วยงานกลาง (สำนักงบประมาณ, สบน., NARIT, วช., บพท.) เมื่อวันที่ 16 กันยายน 2569 ณ มหาวิทยาลัยเชียงใหม่ พร้อมระบบเพิ่ม/แก้ไขข้อเสนอได้เอง
+                        </p>
+                    </div>
+                    <div class="flex flex-wrap gap-2 shrink-0">
+                        <button onclick="openAdditionalModal('reiterated')" class="bg-gold-500 hover:bg-gold-400 text-navy-950 font-bold px-3.5 py-2.5 rounded-xl text-xs sm:text-sm transition flex items-center gap-1.5 shadow">
+                            <i class="fa-solid fa-repeat"></i> + เพิ่มข้อเสนอย้ำเรื่องเดิม
+                        </button>
+                        <button onclick="openAdditionalModal('pillar')" class="bg-emerald-500 hover:bg-emerald-400 text-navy-950 font-bold px-3.5 py-2.5 rounded-xl text-xs sm:text-sm transition flex items-center gap-1.5 shadow">
+                            <i class="fa-solid fa-layer-group"></i> + เพิ่มข้อเสนอใหม่ (5 เสาหลัก)
+                        </button>
+                        <button onclick="openAdditionalModal('stop')" class="bg-rose-500 hover:bg-rose-400 text-white font-bold px-3.5 py-2.5 rounded-xl text-xs sm:text-sm transition flex items-center gap-1.5 shadow">
+                            <i class="fa-solid fa-ban"></i> + เพิ่มสิ่งที่ควรหยุดทำ
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Category Filter Bar -->
+            <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm flex flex-wrap items-center justify-between gap-3">
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="setTab3Filter('all')" id="t3-filter-all" class="px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold bg-navy-900 text-white transition">
+                        ทั้งหมด (<span id="t3-cnt-all">24</span>)
+                    </button>
+                    <button onclick="setTab3Filter('reiterated')" id="t3-filter-reiterated" class="px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold bg-amber-50 text-amber-900 border border-amber-300 hover:bg-amber-100 transition">
+                        <i class="fa-solid fa-repeat mr-1"></i> หมวด A: ย้ำสิ่งที่ยังไม่ทำ (<span id="t3-cnt-reit">5</span>)
+                    </button>
+                    <button onclick="setTab3Filter('pillar1')" id="t3-filter-pillar1" class="px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
+                        เสาหลัก 1: โครงสร้าง & Sandbox (4)
+                    </button>
+                    <button onclick="setTab3Filter('pillar2')" id="t3-filter-pillar2" class="px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
+                        เสาหลัก 2: Open Data & AI (3)
+                    </button>
+                    <button onclick="setTab3Filter('pillar3')" id="t3-filter-pillar3" class="px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
+                        เสาหลัก 3: เขตป่า คทช. & ป่าชุมชน (4)
+                    </button>
+                    <button onclick="setTab3Filter('pillar4')" id="t3-filter-pillar4" class="px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
+                        เสาหลัก 4: การเงินสิ่งแวดล้อม (2)
+                    </button>
+                    <button onclick="setTab3Filter('pillar5')" id="t3-filter-pillar5" class="px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
+                        เสาหลัก 5: สุขภาพ & ข้ามแดน (2)
+                    </button>
+                    <button onclick="setTab3Filter('stop')" id="t3-filter-stop" class="px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold bg-rose-50 text-rose-900 border border-rose-300 hover:bg-rose-100 transition">
+                        <i class="fa-solid fa-ban mr-1"></i> หมวด C: สิ่งที่ต้องหยุดทำทันที (<span id="t3-cnt-stop">4</span>)
+                    </button>
+                </div>
+            </div>
+
+            <!-- Additional Proposals Cards Container -->
+            <div id="t3-proposals-list" class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+                <!-- Populated by JS -->
+            </div>
+        </section>
+
+        <!-- =========================================================
+             TAB 4: OFFICIAL CABINET SUBMISSION REPORT (Print & Export)
+        ========================================================== -->
+        <section id="section-tab4" class="space-y-6 hidden">
+            <!-- Control Bar -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 no-print flex flex-wrap items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-xl font-bold text-navy-900 flex items-center gap-2">
+                        <i class="fa-solid fa-file-contract text-gold-600"></i>
+                        ร่างหนังสือและตารางสังเคราะห์แนบหนังสือกราบเรียนนายกรัฐมนตรี / เสนอคณะรัฐมนตรี
+                    </h2>
+                    <p class="text-xs sm:text-sm text-slate-600 mt-0.5">
+                        สรุปผลการดำเนินการตามข้อเสนอแนะเดิม (ปี 2566 และ 2568) ช่องว่างที่ยังไม่ได้ทำ และข้อเสนอแนะฉบับเพิ่มเติม พ.ศ. 2569 พร้อมสั่งพิมพ์เป็น PDF หรือคัดลอกข้อความ
+                    </p>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="copyOfficialReportText()" class="bg-slate-100 hover:bg-slate-200 text-navy-900 border border-slate-300 font-bold px-4 py-2.5 rounded-lg text-xs sm:text-sm transition flex items-center gap-2">
+                        <i class="fa-regular fa-copy"></i>
+                        <span>คัดลอกข้อความทั้งหมด (สำหรับวางใน Word)</span>
+                    </button>
+                    <button onclick="window.print()" class="bg-navy-900 hover:bg-navy-800 text-gold-400 font-bold px-4 py-2.5 rounded-lg text-xs sm:text-sm transition flex items-center gap-2 shadow">
+                        <i class="fa-solid fa-print"></i>
+                        <span>สั่งพิมพ์รายงาน / บันทึก PDF</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Printable Official Document -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 sm:p-10 space-y-8">
+                <!-- Document Header -->
+                <div class="text-center border-b-2 border-navy-900 pb-6">
+                    <div class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-navy-900 text-gold-400 mb-3 no-print">
+                        <i class="fa-solid fa-scale-balanced text-2xl"></i>
+                    </div>
+                    <h2 class="text-xl sm:text-2xl font-bold text-navy-950">
+                        รายงานผลการติดตามการดำเนินการตามข้อเสนอแนะของคณะกรรมการสิทธิมนุษยชนแห่งชาติ
+                    </h2>
+                    <h3 class="text-base sm:text-lg font-bold text-navy-800 mt-1">
+                        เรื่อง การแก้ไขปัญหามลพิษทางอากาศจากฝุ่นละอองขนาดเล็ก (PM<sub>2.5</sub>) และข้อเสนอแนะเพิ่มเติม (พ.ศ. 2569)
+                    </h3>
+                    <p class="text-xs text-slate-600 mt-2 max-w-4xl mx-auto">
+                        สังเคราะห์จาก: (1) หนังสือ กสม. ที่ สม 0701/43 ลว. 11 ส.ค. 2566 (2) หนังสือ กสม. ที่ สม 0701/63 ลว. 24 ธ.ค. 2568 (3) สรุปผลการพิจารณาและผลการดำเนินการในภาพรวมของ ทส. และหน่วยงานที่เกี่ยวข้องต่อ ครม. (4) รายงานสรุปการเสวนาวิกฤตฝุ่น PM2.5 ลว. 6 พ.ค. 2569 และ (5) บันทึกการประชุมเวทีถอดบทเรียนและพัฒนายุทธศาสตร์ฝุ่นควันภาคเหนือ ณ มหาวิทยาลัยเชียงใหม่ ลว. 15–16 ก.ย. 2569
+                    </p>
+                </div>
+
+                <!-- Part 1 Table -->
+                <div class="space-y-3">
+                    <h4 class="text-base sm:text-lg font-bold text-navy-950 bg-navy-50 px-4 py-2.5 rounded-lg border-l-4 border-navy-900">
+                        ส่วนที่ 1: ตารางตรวจสอบผลการดำเนินการตามข้อเสนอแนะเดิมของ กสม. (ใครทำอะไรไปแล้ว vs สิ่งที่ยังไม่ได้ทำ/ช่องว่างในพื้นที่)
+                    </h4>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse border border-slate-300 text-xs">
+                            <thead>
+                                <tr class="bg-navy-900 text-white">
+                                    <th class="border border-slate-300 p-2.5 w-20">ข้อเสนอ/ปี</th>
+                                    <th class="border border-slate-300 p-2.5 w-1/5">สาระสำคัญข้อเสนอแนะ กสม.</th>
+                                    <th class="border border-slate-300 p-2.5 w-24">หน่วยงาน</th>
+                                    <th class="border border-slate-300 p-2.5 w-1/4">สิ่งที่หน่วยงานดำเนินการไปแล้ว (รายงาน ครม.)</th>
+                                    <th class="border border-slate-300 p-2.5 w-1/3">สิ่งที่ยังไม่ได้ทำ / ช่องว่างจากการตรวจติดตาม (Gaps)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="t4-baseline-tbody">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Part 2 Table -->
+                <div class="space-y-3">
+                    <h4 class="text-base sm:text-lg font-bold text-navy-950 bg-gold-50 px-4 py-2.5 rounded-lg border-l-4 border-gold-500">
+                        ส่วนที่ 2: ข้อเสนอแนะฉบับเพิ่มเติม พ.ศ. 2569
+                    </h4>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse border border-slate-300 text-xs">
+                            <thead>
+                                <tr class="bg-navy-800 text-white">
+                                    <th class="border border-slate-300 p-2.5 w-36">หมวดหมู่ / เสาหลัก</th>
+                                    <th class="border border-slate-300 p-2.5 w-1/4">ประเด็นข้อเสนอแนะ</th>
+                                    <th class="border border-slate-300 p-2.5 w-1/3">รายละเอียดแนวทางดำเนินการที่เสนอต่อ ครม.</th>
+                                    <th class="border border-slate-300 p-2.5 w-28">หน่วยงานรับผิดชอบ</th>
+                                    <th class="border border-slate-300 p-2.5">ผลการหารือรองนายกฯ / หน่วยงาน (16 ก.ย. 69)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="t4-additional-tbody">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- =========================================================
+         MODAL 1: EDIT BASELINE ITEM (อัปเดตผลการติดตามข้อเสนอเดิม)
+    ========================================================== -->
+    <div id="modal-baseline" class="fixed inset-0 bg-navy-950/70 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto border border-slate-200">
+            <div class="bg-navy-900 text-white px-6 py-4 rounded-t-2xl flex items-center justify-between sticky top-0 z-10">
+                <div>
+                    <span id="m-base-badge" class="text-xs bg-gold-500 text-navy-950 font-bold px-2 py-0.5 rounded">ข้อเสนอปี 2568</span>
+                    <h3 id="m-base-title" class="text-lg font-bold mt-1">แก้ไข/อัปเดตผลการติดตาม</h3>
+                </div>
+                <button onclick="closeBaselineModal()" class="text-blue-200 hover:text-white text-xl">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <form onsubmit="saveBaselineModal(event)" class="p-6 space-y-4">
+                <input type="hidden" id="m-base-id">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">สถานะการดำเนินการ</label>
+                        <select id="m-base-status" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm">
+                            <option value="good">ก้าวหน้าชัดเจน (แต่ต้องขยายผล)</option>
+                            <option value="partial">ดำเนินการบางส่วน (มีช่องว่างสำคัญ)</option>
+                            <option value="bottleneck">ติดคอขวดเชิงโครงสร้าง / ต้องย้ำเร่งด่วน</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">ความคืบหน้าโดยประมาณ (%)</label>
+                        <input type="number" id="m-base-progress" min="0" max="100" step="5" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-emerald-800 mb-1">สิ่งที่หน่วยงานทำไปแล้ว (1 บรรทัดต่อ 1 รายการ)</label>
+                    <textarea id="m-base-done" rows="5" class="w-full p-3 border border-emerald-300 bg-emerald-50/20 rounded-lg text-sm"></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-rose-800 mb-1">สิ่งที่ยังไม่ได้ทำ / ช่องว่างจากการตรวจติดตาม (Gaps) (1 บรรทัดต่อ 1 รายการ)</label>
+                    <textarea id="m-base-gaps" rows="5" class="w-full p-3 border border-rose-300 bg-rose-50/20 rounded-lg text-sm"></textarea>
+                </div>
+                <div class="flex justify-end gap-2 pt-3 border-t border-slate-200">
+                    <button type="button" onclick="closeBaselineModal()" class="px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:bg-slate-100">ยกเลิก</button>
+                    <button type="submit" class="px-5 py-2 rounded-lg text-sm font-bold bg-navy-900 hover:bg-navy-800 text-gold-400 shadow">บันทึกข้อมูล</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- =========================================================
+         MODAL 2: ADD / EDIT ADDITIONAL PROPOSAL (ข้อเสนอฉบับเพิ่มเติม ปี 69)
+    ========================================================== -->
+    <div id="modal-additional" class="fixed inset-0 bg-navy-950/70 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-slate-200">
+            <div class="bg-navy-900 text-white px-6 py-4 rounded-t-2xl flex items-center justify-between sticky top-0 z-10">
+                <div>
+                    <span class="text-xs bg-gold-500 text-navy-950 font-bold px-2 py-0.5 rounded">ข้อเสนอแนะฉบับเพิ่มเติม พ.ศ. 2569</span>
+                    <h3 id="m-add-header" class="text-lg font-bold mt-1">เพิ่ม/แก้ไขข้อเสนอแนะ</h3>
+                </div>
+                <button onclick="closeAdditionalModal()" class="text-blue-200 hover:text-white text-xl">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <form onsubmit="saveAdditionalModal(event)" class="p-6 space-y-4">
+                <input type="hidden" id="m-add-id">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">หมวดหมู่ / เสาหลักยุทธศาสตร์ *</label>
+                        <select id="m-add-category" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm font-semibold">
+                            <option value="reiterated">หมวด A: ข้อเสนอย้ำสิ่งที่ยังไม่ทำ (Reiterated)</option>
+                            <option value="pillar1">เสาหลักที่ 1: ปฏิรูปโครงสร้าง & CEO Sandbox</option>
+                            <option value="pillar2">เสาหลักที่ 2: ข้อมูลเปิด (Open Data) & เทคโนโลยี AI</option>
+                            <option value="pillar3">เสาหลักที่ 3: ปฏิรูปเขตป่า สิทธิที่ดิน คทช. & ป่าชุมชน</option>
+                            <option value="pillar4">เสาหลักที่ 4: นวัตกรรมกลไกการเงินเพื่อสิ่งแวดล้อม</option>
+                            <option value="pillar5">เสาหลักที่ 5: สิทธิสุขภาพประชาชน & การจัดการฝุ่นข้ามแดน</option>
+                            <option value="stop">หมวด C: สิ่งที่ควรหยุดทำทันที (Stop-Doing)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">ความเร่งด่วน / กรอบเวลา</label>
+                        <input type="text" id="m-add-priority" placeholder="เช่น เร่งด่วนที่สุด (เสนอ ครม. พ.ย. 69)" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">หัวข้อข้อเสนอแนะ *</label>
+                    <input type="text" id="m-add-title" required placeholder="ระบุหัวข้อข้อเสนอแนะ..." class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">รายละเอียดมาตรการและแนวทางดำเนินการ *</label>
+                    <textarea id="m-add-detail" rows="4" required placeholder="ระบุรายละเอียดสิ่งที่เสนอให้ ครม. หรือหน่วยงานดำเนินการ..." class="w-full p-3 border border-slate-300 rounded-lg text-sm"></textarea>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">หน่วยงานเป้าหมาย *</label>
+                        <input type="text" id="m-add-agencies" required placeholder="เช่น ครม., ทส., มท., สงป., สบน." class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">อ้างอิงข้อเสนอเดิม / ที่มา</label>
+                        <input type="text" id="m-add-ref" placeholder="เช่น ย้ำข้อ 4 ปี 68 / เวที มช. 15-16 ก.ย. 69" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-navy-800 mb-1">ผลการตอบรับจากเวทีรองนายกฯ / หน่วยงานที่เกี่ยวข้อง (16 ก.ย. 2569)</label>
+                    <textarea id="m-add-response" rows="2" placeholder="ระบุความคืบหน้าหรือการตอบรับจากหน่วยงาน..." class="w-full p-3 border border-blue-300 bg-blue-50/30 rounded-lg text-sm"></textarea>
+                </div>
+                <div class="flex justify-end gap-2 pt-3 border-t border-slate-200">
+                    <button type="button" onclick="closeAdditionalModal()" class="px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:bg-slate-100">ยกเลิก</button>
+                    <button type="submit" class="px-5 py-2 rounded-lg text-sm font-bold bg-gold-500 hover:bg-gold-400 text-navy-950 shadow">บันทึกข้อเสนอแนะ</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast-box" class="fixed bottom-5 right-5 bg-navy-950 text-white px-4 py-3 rounded-xl shadow-xl border border-gold-500/50 flex items-center gap-3 z-50 transition-all duration-300 opacity-0 pointer-events-none translate-y-2">
+        <i class="fa-solid fa-circle-check text-gold-400"></i>
+        <span id="toast-text" class="text-sm font-medium">ดำเนินการสำเร็จ</span>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-navy-950 text-blue-200/80 py-4 px-4 mt-12 no-print border-t border-navy-800">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between text-xs gap-2">
+            <div>
+                <strong class="text-gold-400">สำนักงานคณะกรรมการสิทธิมนุษยชนแห่งชาติ (กสม.)</strong> — ระบบติดตามการดำเนินการตามข้อเสนอแนะในการแก้ไขปัญหามลพิษทางอากาศจากฝุ่น PM<sub>2.5</sub>
+            </div>
+            <div>
+                ข้อมูลครบถ้วนจากเอกสารแนบ 6 ฉบับ (พ.ศ. 2566 – กันยายน 2569)
+            </div>
+        </div>
+    </footer>
+
+    <!-- =========================================================
+         JAVASCRIPT DATA & APPLICATION CONTROLLER
+    ========================================================== -->
+    <script>
+        const STORAGE_BASE_KEY = 'nhrct_pm25_base_v2';
+        const STORAGE_ADD_KEY = 'nhrct_pm25_add_v2';
+
+        // 1. INITIAL BASELINE DATA (14 Items: 11 from 2568 + 3 from 2566)
+        const initialBaselineData = [
+            {
+                id: '68-1',
+                year: '2568',
+                code: 'ข้อ 1 (ปี 68)',
+                docRef: 'สม 0701/63 ลว. 24 ธ.ค. 2568',
+                title: 'ผลักดันร่างพระราชบัญญัติบริหารจัดการเพื่ออากาศสะอาด พ.ศ. .... เพื่อให้มีผลใช้บังคับโดยเร็ว',
+                recommendation: 'ให้รัฐบาลผลักดันร่างพระราชบัญญัติบริหารจัดการเพื่ออากาศสะอาด พ.ศ. .... ที่ยังไม่ได้รับความเห็นชอบจากรัฐสภาเพื่อให้มีผลใช้บังคับโดยเร็ว',
+                agencies: ['ครม.', 'ทส.'],
+                status: 'good',
+                progress: 75,
+                done: [
+                    'รัฐสภาได้มีมติเห็นชอบร่าง พ.ร.บ. บริหารจัดการเพื่ออากาศสะอาด พ.ศ. .... ตามที่ ครม. ร้องขอตามมาตรา 147 ของรัฐธรรมนูญฯ',
+                    'วุฒิสภามีมติเห็นชอบร่าง พ.ร.บ. ในวาระที่ 2 และวาระที่ 3 แล้ว ระหว่างวันที่ 7 - 9 กรกฎาคม 2569',
+                    'จัดส่งร่าง พ.ร.บ. กลับไปยังสภาผู้แทนราษฎรเพื่อพิจารณาเห็นชอบอีกครั้งเนื่องจากมีการแก้ไขเนื้อหา',
+                    'รองนายกฯ (ศ.ดร.ยศชนัน) ยืนยันเมื่อ 16 ก.ย. 69 ว่าไม่จำเป็นต้องรอกฎหมายผ่านสภาทั้งฉบับ สามารถออกกฎกระทรวงหรือประกาศเฉพาะกิจสำหรับพื้นที่นำร่อง (Sandbox) ไปพลางก่อนได้'
+                ],
+                gaps: [
+                    'ร่าง พ.ร.บ. ยังอยู่ระหว่างรอสภาผู้แทนราษฎรพิจารณาเห็นชอบเนื้อหาที่วุฒิสภาแก้ไข จึงยังไม่มีผลใช้บังคับทันฤดูฝุ่นที่จะมาถึง',
+                    'ต้องเฝ้าระวังไม่ให้กลไกสำคัญ (เช่น กองทุนอากาศสะอาด มาตรการทางเศรษฐศาสตร์ และสิทธิของประชาชน) ถูกลดทอนในชั้นการออกอนุบัญญัติ/กฎหมายลำดับรอง'
+                ]
+            },
+            {
+                id: '68-2',
+                year: '2568',
+                code: 'ข้อ 2 (ปี 68)',
+                docRef: 'สม 0701/63 ลว. 24 ธ.ค. 2568',
+                title: 'เร่งดำเนินการตามแผนปฏิบัติการขับเคลื่อนวาระแห่งชาติ “การแก้ไขปัญหามลพิษด้านฝุ่นละออง” ฉบับที่ 2 (พ.ศ. 2568 - 2570)',
+                recommendation: 'ให้ ทส. มท. และหน่วยงานอื่นที่เกี่ยวข้อง เร่งดำเนินการตามแผนปฏิบัติการขับเคลื่อนวาระแห่งชาติการแก้ไขปัญหามลพิษด้านฝุ่นละออง ฉบับที่ 2 พ.ศ. 2568 - 2570 ครอบคลุมมาตรการป้องกัน ควบคุม และการลดมลพิษที่แหล่งกำเนิดอย่างเป็นระบบ',
+                agencies: ['ทส.', 'มท.', 'กษ.', 'ศธ.'],
+                status: 'partial',
+                progress: 60,
+                done: [
+                    'ทส.: ครม. เห็นชอบแผนปฏิบัติการฯ ฉบับที่ 2 (ปี 68-70) เมื่อ 22 ก.ค. 2568 และตั้งศูนย์ปฏิบัติการแก้ไขปัญหาไฟป่าและหมอกควัน (ส่วนหน้า ภาคเหนือ) ตามคำสั่ง ทส. ที่ 235/2569 ลว. 2 เม.ย. 2569',
+                    'มท. (ปภ.): สั่งการ 6 มาตรการ ใช้ระบบ Single Command ตาม พ.ร.บ. ปภ. 2550 และกำหนดหลักเกณฑ์ประกาศเขตให้ความช่วยเหลือผู้ประสบภัยพิบัติกรณีฉุกเฉินเมื่อ PM2.5 เฉลี่ย 24 ชม. >= 125 มคก./ลบ.ม. ติดต่อกัน 5 วัน (ตามระเบียบ กค. 2568 และหลักเกณฑ์ 2569)',
+                    'กษ.: ดำเนิน 5 มาตรการ (คุมรถราชการอายุไม่เกิน 10 ปี, ขยายผลโครงการหลวง, ส่งเสริมไถกลบ/อัดฟาง, ดัดแปรสภาพอากาศ, ร่างคำสั่งตั้งอนุกรรมการตรวจสอบย้อนกลับข้าวโพดนำเข้า Post-Audit)',
+                    'ศธ.: ขับเคลื่อนการสร้างความตระหนักรู้และแกนนำนักเรียนลดมลพิษที่แหล่งกำเนิดทางอ้อม'
+                ],
+                gaps: [
+                    'เกณฑ์การประกาศเขตช่วยเหลือผู้ประสบภัยพิบัติกรณีฉุกเฉินของ ปภ. (PM2.5 >= 125 มคก./ลบ.ม. ติดต่อกัน 5 วัน) สูงเกินความเป็นจริง ทำให้ไม่สามารถประกาศช่วยเหลือประชาชนได้ทันท่วงที อีกทั้งผู้ว่าฯ/ท้องถิ่นบางแห่งกังวลว่าจะกระทบภาพลักษณ์การท่องเที่ยว (กรณีแม่สาย จ.เชียงราย)',
+                    'แผนยุทธศาสตร์ระดับจังหวัดและแผนชุมชนในเชียงใหม่กว่า 95% ถูกยับยั้งหรือไม่สามารถปฏิบัติได้จริงเพราะติดขัดข้อกฎหมายและงบกลางอนุมัติล่าช้า (บางปีมติ ครม. ออกเดือน ก.พ. เกิดสุญญากาศช่วงรอยต่อปีงบประมาณ)',
+                    'ผู้ว่าราชการจังหวัดไม่มีอำนาจสั่งการและบริหารงบข้ามแท่งกระทรวงในเขตป่าอนุรักษ์และป่าสงวนฯ'
+                ]
+            },
+            {
+                id: '68-3',
+                year: '2568',
+                code: 'ข้อ 3 (ปี 68)',
+                docRef: 'สม 0701/63 ลว. 24 ธ.ค. 2568',
+                title: 'พัฒนาระบบฐานข้อมูลคุณภาพอากาศ บูรณาการเทคโนโลยีดาวเทียมและระบบตรวจวัดที่ระบุแหล่งกำเนิดชัดเจน แจ้งเตือนครอบคลุมทุกกลุ่ม',
+                recommendation: 'ให้ ทส. ดศ. และหน่วยงานอื่นที่เกี่ยวข้องพัฒนาระบบฐานข้อมูลคุณภาพอากาศ โดยบูรณาการเทคโนโลยีดาวเทียมและระบบตรวจวัดมลพิษทางอากาศที่สามารถระบุแหล่งกำเนิดมลพิษได้อย่างชัดเจน เพื่อเพิ่มศักยภาพการเฝ้าระวัง การเตือนภัย และการสื่อสารให้ครอบคลุมประชาชนทุกกลุ่ม',
+                agencies: ['ทส.', 'ดศ.', 'มท.'],
+                status: 'good',
+                progress: 75,
+                done: [
+                    'ทส. (คพ.): ใช้ข้อมูลจุดความร้อนจากดาวเทียม Suomi NPP ระบบเซนเซอร์ VIIRS ร่วมกับ GIS และขยายสถานีตรวจวัดหลักจาก 40 เป็น 100 สถานี',
+                    'ดศ. (กรมอุตุฯ): รายงานดัชนีการระบายอากาศ (Ventilation Rate, PBLH, CAPE, LI) ทุก 3 ชม. ล่วงหน้า 10 วัน ครบ 77 จังหวัด และแจ้งเตือนผ่าน DOC TMD Alert เมื่อฝุ่นเกิน 75.1 มคก./ลบ.ม. เกิน 50% ของพื้นที่',
+                    'ดศ. (สขญ./BDI): พัฒนาแพลตฟอร์มฐานข้อมูลกลาง Envi Link (envilink.go.th) รวบรวมข้อมูล 238 ชุด จากกว่า 70 องค์กร ร่วมกับ NECTEC, มช. และ JGSEE (Clean Air Fund) ทำแผนที่กลุ่มเปราะบางใน กทม.',
+                    'ดศ. & ปภ.: เชื่อมโยงระบบแจ้งเตือนฉุกเฉินแห่งชาติ (Cell Broadcast: CBE) กับ 3 ค่ายมือถือ (AIS, TRUE, NT) เสร็จสมบูรณ์ รองรับ 8 ภัยพิบัติรวมถึงฝุ่น PM2.5'
+                ],
+                gaps: [
+                    'ความขัดแย้งของชุดข้อมูลดาวเทียม: ภาครัฐใช้เฉพาะดาวเทียม Suomi NPP (VIIRS) ขณะที่ภาคประชาชนใช้ NOAA-20/21 ด้วย เมื่อประชาชนแจ้งเหตุไฟจากพิกัด NOAA ที่ไม่ปรากฏในระบบรัฐ เจ้าหน้าที่มักไม่เข้าดำเนินการเพราะจังหวัดไม่ได้สั่งการ',
+                    'รอบการโคจรของดาวเทียมห่างกัน 3-4 ชั่วโมง ช้าเกินกว่าอัตราการลุกลามของไฟป่า และระบบแจ้งเตือนไฟป่าของจังหวัดรายงานเฉพาะเขตอำเภอตนเอง ไม่แจ้งเตือนไฟจากอุทยานฯ ในอำเภอข้างเคียงที่ห่างไม่ถึง 500 เมตร (กรณี อ.เมืองปาน/ลำปาง)',
+                    'งบดูแลรักษาสถานีตรวจวัดของ คพ. คงที่เพียง 20 ล้านบาท/ปี (ไม่พอดูแล 100 สถานี) ทำให้สถานีตรวจวัดหลักใน จ.เชียงใหม่ ไม่มีแม้กระทั่งเครื่องวัดก๊าซโอโซน (O3) และไทยมีเครื่อง Mass Spectrometer วิเคราะห์องค์ประกอบฝุ่นเพียง 6 เครื่อง (เทียบกับจีนที่มี 120 เครื่อง)',
+                    'สื่อและหน่วยงานใช้ดัชนีคุณภาพอากาศของไทยปนกับของ US EPA ซึ่งมีรหัสสีต่างกัน สร้างความสับสนในการปฏิบัติตัวของประชาชน'
+                ]
+            },
+            {
+                id: '68-4',
+                year: '2568',
+                code: 'ข้อ 4 (ปี 68)',
+                docRef: 'สม 0701/63 ลว. 24 ธ.ค. 2568',
+                title: 'เร่งกระจายอำนาจให้องค์กรปกครองส่วนท้องถิ่น (อปท.) จัดสรรงบประมาณที่เพียงพอ สนับสนุนองค์ความรู้และอุปกรณ์ตรวจวัด',
+                recommendation: 'ให้ มท. ทส. และหน่วยงานอื่นที่เกี่ยวข้อง เร่งกระจายอำนาจให้องค์กรปกครองส่วนท้องถิ่นเพื่อร่วมป้องกันแก้ไขปัญหา โดยจัดสรรงบประมาณที่เพียงพอ มีอำนาจหน้าที่ตามกฎหมาย สนับสนุนองค์ความรู้และอุปกรณ์ด้านการตรวจวัดหรือเทคโนโลยีติดตามคุณภาพอากาศ',
+                agencies: ['มท.', 'ทส.', 'ก.พ.ร.'],
+                status: 'bottleneck',
+                progress: 35,
+                done: [
+                    'ทส.: คณะกรรมการการกระจายอำนาจฯ ออกประกาศกำหนดภารกิจด้านการป้องกันและควบคุมไฟป่าให้แก่ อปท. ลว. 12 มี.ค. 2567 (ราชกิจจานุเบกษา 14 มี.ค. 2567) ถ่ายโอนให้ อปท. 2,609 แห่ง',
+                    'มท. (สถ.): แจ้งเห็นพ้องในหลักการ และให้ อปท. ออกเทศบัญญัติควบคุมการเผาตาม พ.ร.บ. การสาธารณสุข 2535 และจัดทำแผนเผชิญเหตุท้องถิ่น'
+                ],
+                gaps: [
+                    'ถ่ายโอนแต่ภารกิจแต่ไม่ให้งบประมาณ: ข้อมูลจากเวที มช. (15-16 ก.ย. 69) พบว่า อปท. ในเชียงใหม่กว่า 120 แห่ง มีภารกิจดับไฟ 5 รายการตามกฎหมาย แต่ได้รับงบประมาณเพียง "หลักหมื่นบาท" เท่านั้น ส่วนใน จ.ลำปาง มี อปท. เพียง 20% ที่มีแผนและงบจัดการไฟป่าจริงจัง',
+                    'ระเบียบการเบิกจ่ายเป็นอุปสรรค: ค่าตอบแทนผู้ปฏิบัติงานดับไฟเบิกได้เพียง 240 บาท/วัน โดยต้องปฏิบัติงานครบ 12 ชั่วโมงเต็มตามระเบียบค่าเดินทางจึงจะเบิกได้ และจ้างเหมาได้เพียงระยะสั้น 3 เดือนตามปีงบประมาณ',
+                    'ความกังวลต่อ สตง.: อปท. ไม่กล้าจัดซื้อหน้ากาก N95 เครื่องฟอกอากาศ หรืออุปกรณ์ดับไฟโดยตรงเพราะกลัวถูกสำนักงานการตรวจเงินแผ่นดิน (สตง.) ทักท้วงและเรียกเงินคืน จนต้องเลี่ยงไปตั้งเป็นงบวัสดุฝึกอบรมแทน',
+                    'กำลังคนไม่สมดุล: กรมป่าไม้มีเจ้าหน้าที่ดับไฟเพียง 250 คนทั่วประเทศ ขณะที่พื้นที่ไฟไหม้สูงถึง 13-15 ล้านไร่/ปี บางอำเภอมีป่า 1.3 ล้านไร่แต่มีเจ้าหน้าที่เพียง 20 คน (ดูแลได้เพียง 10% เหลือช่องว่าง 90%)'
+                ]
+            },
+            {
+                id: '68-5',
+                year: '2568',
+                code: 'ข้อ 5 (ปี 68)',
+                docRef: 'สม 0701/63 ลว. 24 ธ.ค. 2568',
+                title: 'ทบทวนมาตรการห้ามเผาเด็ดขาด (Zero Burning) คำนึงถึงบริบทพื้นที่และไร่หมุนเวียน นำแอปพลิเคชันสนับสนุนการบริหารจัดการการเผาที่ยืดหยุ่น',
+                recommendation: 'ให้ ทส. กษ. มท. และหน่วยงานอื่นที่เกี่ยวข้องทบทวนมาตรการห้ามเผาเด็ดขาด โดยคำนึงบริบทพื้นที่และการเกษตรที่ยังพึ่งพาการเผาแบบไร่หมุนเวียน รวมถึงนำเทคโนโลยี อาทิ แอปพลิเคชัน Fire-D สนับสนุนการบริหารจัดการการเผาที่ยืดหยุ่นและไม่ส่งผลกระทบต่อการดำรงชีพของประชาชน',
+                agencies: ['ทส.', 'กษ.', 'มท.', 'ก.พ.ร.'],
+                status: 'bottleneck',
+                progress: 40,
+                done: [
+                    'ทส.: ออกคำแนะนำและหลักเกณฑ์การบริหารจัดการการเผาในพื้นที่เกษตรโดยใช้ระบบ Burn Check (ลงทะเบียนล่วงหน้า 7 วัน, แปลงไม่เกิน 30 ไร่/วัน ย่อยแปลงละไม่เกิน 5 ไร่, เผาช่วง 10.00-16.00 น. ในวันที่ PM2.5 ไม่เกิน 75 มคก./ลบ.ม.)',
+                    'กษ.: มีแนวทางทบทวนประกาศมาตรการแก้ไขปัญหาฝุ่น PM2.5 ภาคการเกษตร (ฉบับที่ 2) ลว. 5 พ.ย. 2568 เพื่อรองรับพื้นที่ลาดชันที่เครื่องจักรกลเข้าไม่ถึง',
+                    'จังหวัดเชียงใหม่จัดทำแผนยุทธศาสตร์ 5 ปี ตั้งกรอบพื้นที่ใช้ไฟแบบควบคุม (Prescribed Burning) 400,000 - 700,000 ไร่ (ความต้องการใช้ไฟจริงจากเวทีรับฟังความเห็น 455,000 ไร่)'
+                ],
+                gaps: [
+                    'หลักเกณฑ์ Burn Check ของ ทส. อนุญาตเฉพาะพืชเศรษฐกิจ 3 ชนิด (นาข้าว ข้าวโพดเลี้ยงสัตว์ อ้อยโรงงาน) ยังไม่ครอบคลุม "ไร่หมุนเวียน" ของชุมชนและกลุ่มชาติพันธุ์บนพื้นที่สูง (ซึ่งในเชียงใหม่มีความต้องการใช้ไฟประมาณ 120,000 ไร่)',
+                    'ระเบียบคณะกรรมการนโยบายที่ดินแห่งชาติ (คทช.) ยังไม่รับรอง "ไร่หมุนเวียน" เป็นเงื่อนไขการใช้ที่ดินที่ถูกต้อง ทำให้รอบหมุนเวียนลดจาก 12 ปี เหลือเพียง 3 ปี กระทบสมดุลนิเวศ และใน อ.แม่แจ่ม ยังมีพื้นที่ค้างการจัดสรรสิทธิ์ คทช. กว่า 80,000 ไร่ (60% เป็นไร่หมุนเวียน) รวมถึงสมุดประจำตัว คทช. เชียงใหม่ทำเสร็จเพียง 20% เพราะค้างงบจัดพิมพ์',
+                    'คำสั่งห้ามเผาของแต่ละกระทรวงขัดแย้งกันเอง (เช่น กษ. ห้ามเผา 31 มี.ค.-30 เม.ย. แต่ส่วนกลาง/ปภ. ห้ามเผา 1 ม.ค.-30 เม.ย.) และบางกรณีจังหวัดวางแผนจัดการเชื้อเพลิงไว้แล้วแต่ส่วนกลางสั่งห้ามเผาเด็ดขาดกลางคัน ทำให้ชาวบ้านลักลอบเผากลางคืนและสะสมเชื้อเพลิงจนเกิดไฟป่ารุนแรงในเดือนเมษายน',
+                    'ชาวบ้านในเขตป่าไม่กล้าลงทะเบียนขอเผาในแอปพลิเคชัน เพราะเกรงว่าข้อมูลพิกัดจะกลายเป็นหลักฐานมัดตัวดำเนินคดีอาญาตามกฎหมายป่าไม้'
+                ]
+            },
+            {
+                id: '68-6',
+                year: '2568',
+                code: 'ข้อ 6 (ปี 68)',
+                docRef: 'สม 0701/63 ลว. 24 ธ.ค. 2568',
+                title: 'ควบคุมและกำกับดูแลโรงงานอุตสาหกรรมอย่างทั่วถึงและเข้มงวด กำหนดให้ใช้ระบบ CEMS และเปิดเผยต่อสาธารณะอย่างโปร่งใส',
+                recommendation: 'ให้ อต. ทส. และหน่วยงานอื่นที่เกี่ยวข้องควบคุมและกำกับดูแลโรงงานอุตสาหกรรมอย่างทั่วถึงและเข้มงวด โดยกำหนดให้ใช้ระบบตรวจวัดการระบายมลพิษแบบต่อเนื่อง (Continuous Emission Monitoring System: CEMS) ซึ่งต้องเปิดเผยต่อสาธารณะอย่างโปร่งใส',
+                agencies: ['อต.', 'ทส.'],
+                status: 'partial',
+                progress: 70,
+                done: [
+                    'อต. (กรอ.): แผนตรวจโรงงานเชิงรุกใน กทม. ปริมณฑล และ 17 จว.ภาคเหนือ (พ.ย. 68 - ก.พ. 69) เป้าหมาย 1,985 โรงงาน ตรวจแล้ว 1,581 โรงงาน ปฏิบัติตามกฎหมาย 1,558 โรงงาน สั่งปรับปรุง 23 โรงงาน (ข้อมูล ณ 23 มี.ค. 2569)',
+                    'อต.: บังคับใช้ประกาศติดตั้ง CEMS พ.ศ. 2565 และ (ฉบับที่ 2) พ.ศ. 2567 มีโรงงานเข้าข่าย 659 โรงงาน (1,356 ปล่อง) เชื่อมต่อระบบ POMS แสดงผลแบบ real-time แล้ว 433 โรงงาน (893 ปล่อง) (ณ 22 ม.ค. 2569)',
+                    'อต.: ออกประกาศกระทรวงอุตสาหกรรมปี 2569 จำนวน 2 ฉบับ ควบคุมสารเจือปนและบังคับติด CEMS สำหรับโรงงานในกรุงเทพมหานคร (มีผล 13 ก.พ. 2569 โรงงานเดิมต้องติดให้เสร็จภายใน 1 ต.ค. 2569)'
+                ],
+                gaps: [
+                    'ยังมีโรงงานที่เข้าข่ายต้องติดตั้ง CEMS แต่ยังไม่ได้เชื่อมต่อระบบ POMS อีก 226 โรงงาน (463 ปล่อง) หรือคิดเป็น 34% เนื่องจากได้รับการขยายเวลาถึง 31 ธ.ค. 2570',
+                    'ข้อมูลจากเวที มช. (15-16 ก.ย. 69) ชี้ว่าโรงงานที่ขึ้นทะเบียนในจังหวัดเชียงใหม่กว่า 900 แห่ง ยังไม่มีการเปิดเผยข้อมูลการปล่อยมลพิษต่อสาธารณะแบบเรียลไทม์ให้ประชาชนในพื้นที่ตรวจสอบได้'
+                ]
+            },
+            {
+                id: '68-7',
+                year: '2568',
+                code: 'ข้อ 7 (ปี 68)',
+                docRef: 'สม 0701/63 ลว. 24 ธ.ค. 2568',
+                title: 'ยกระดับมาตรฐานไอเสียรถยนต์ให้เป็นไปตามเกณฑ์ EURO 6 และตรวจจับรถยนต์ที่ปล่อยควันดำเกินมาตรฐานในพื้นที่เสี่ยงอย่างจริงจัง',
+                recommendation: 'ให้ คค. ทส. และหน่วยงานอื่นที่เกี่ยวข้อง ยกระดับมาตรฐานไอเสียรถยนต์ให้เป็นไปตามเกณฑ์ EURO 6 ซึ่งเป็นมาตรฐานสากลกำหนดปริมาณการปล่อยมลพิษของรถยนต์ ตรวจจับรถยนต์ที่ปล่อยควันดำเกินมาตรฐานในพื้นที่เสี่ยงอย่างจริงจัง',
+                agencies: ['คค.', 'ทส.', 'อต.'],
+                status: 'partial',
+                progress: 70,
+                done: [
+                    'ทส./อต.: บังคับใช้มาตรฐาน EURO 5 สำหรับรถยนต์ดีเซลทุกขนาดและเบนซินขนาดใหญ่ ตั้งแต่วันที่ 1 ม.ค. 2567 ร่วมกับน้ำมันกำมะถันต่ำไม่เกิน 10 ppm',
+                    'ทส./อต.: บังคับใช้มาตรฐาน EURO 6 สำหรับรถยนต์เบนซินขนาดเล็ก (1 ม.ค. 2568) และรถยนต์เบนซินขนาดใหญ่ (1 ม.ค. 2569)',
+                    'ทส.: ปรับลดเกณฑ์มาตรฐานควันดำรถยนต์ดีเซลใช้งานจากเดิมไม่เกิน 30% เป็นไม่เกิน 20% มีผลบังคับใช้ตั้งแต่วันที่ 1 พ.ย. 2568 หากเกินติดสติกเกอร์ "ห้ามใช้ชั่วคราว"',
+                    'คค. (ขบ.): ตั้งจุดตรวจควันดำ พ่น "ห้ามใช้" และร่วมกับ กทม. ทำระบบบัญชีสีเขียว (Green List) เข้าเขตควบคุมมลพิษต่ำ (LEZ)'
+                ],
+                gaps: [
+                    'รถยนต์เครื่องยนต์ดีเซล (ซึ่งเป็นแหล่งปล่อย PM2.5 และซัลเฟอร์ไดออกไซด์หลักในภาคขนส่ง) ยังคงใช้มาตรฐาน EURO 5 ยังไม่ได้ยกระดับเป็น EURO 6 เหมือนรถยนต์เบนซิน',
+                    'งานวิจัยของ NARIT (16 ก.ย. 69) พบว่าก๊าซ SO2 จากรถดีเซลและ NOx จากรถเบนซินในเมืองใหญ่และเชียงใหม่ เป็นสารตั้งต้นสำคัญที่ก่อให้เกิด "อนุภาคฝุ่นทุติยภูมิ" (Secondary PM2.5) และสารประกอบ Organonitrate/Organosulfate ที่มีความเสี่ยงก่อมะเร็งสูง'
+                ]
+            },
+            {
+                id: '68-8',
+                year: '2568',
+                code: 'ข้อ 8 (ปี 68)',
+                docRef: 'สม 0701/63 ลว. 24 ธ.ค. 2568',
+                title: 'พัฒนาและส่งเสริมการเข้าถึงเทคโนโลยีการจัดการเศษวัสดุการเกษตร โดยกำหนดมาตรการจูงใจทางเศรษฐกิจเพื่อลดหรือหลีกเลี่ยงการเผา',
+                recommendation: 'ให้ กษ. อต. และหน่วยงานอื่นที่เกี่ยวข้อง พัฒนาและส่งเสริมการเข้าถึงเทคโนโลยีการจัดการเศษวัสดุการเกษตร โดยกำหนดมาตรการจูงใจทางเศรษฐกิจและมุ่งปรับเปลี่ยนวิธีการเพื่อลดหรือหลีกเลี่ยงการเผา',
+                agencies: ['กษ.', 'อต.'],
+                status: 'partial',
+                progress: 60,
+                done: [
+                    'กษ.: ส่งเสริมการไถกลบ การอัดฟาง แปรรูปเป็นอาหารสัตว์และปุ๋ยอินทรีย์ และพัฒนามาตรฐานสินค้าเกษตรปลอดการเผา',
+                    'อต. (สอน.): ให้ยืมเครื่องสางใบอ้อย 288 เครื่อง, อุดหนุนงบเครื่องจักรกลไม่เกินกึ่งหนึ่ง, โครงการสินเชื่อสีเขียวชดเชยดอกเบี้ยให้ชาวไร่อ้อยซื้อเครื่องจักรกล ปี 68-70 วงเงิน 6,000 ล้านบาท, สิทธิประโยชน์ BOI (โครงการละไม่น้อยกว่า 5 ล้านบาท) และจ่ายเงินเพิ่มให้ชาวไร่อ้อยคู่สัญญาที่ตัดอ้อยสด 100%'
+                ],
+                gaps: [
+                    'ข้อมูลจากเวที มช. (15 ก.ย. 69) พบว่าเกษตรกรที่เลือกไม่เผาต้องแบกรับต้นทุนค่าตัดและขนย้ายเศษวัสดุสูงถึงประมาณ 400 บาท/ไร่ ขณะที่ฟางข้าวอัดก้อนขายได้จริงเพียงมัดละ 15-16 บาท (หนัก 23 กก.) ซึ่งต่ำกว่าต้นทุนค่าขนส่ง ทำให้วิสาหกิจชุมชนหลายแห่งขาดทุนและล้มเหลว (เฉพาะเชียงใหม่มีนาปี 500,000 ไร่ นาปรัง 200,000 ไร่ ที่ยังขาดกลไกอุดหนุนจุดขาดทุน)',
+                    'มาตรการสินเชื่อ 6,000 ล้านบาทและเครื่องจักรกลกระจุกตัวอยู่ในกลุ่มอ้อยโรงงาน แต่ยังไม่ครอบคลุมกลุ่มข้าวโพดเลี้ยงสัตว์บนพื้นที่ลาดชันกว่า 100,000 ไร่ในเขตลุ่มน้ำชั้น 1-2'
+                ]
+            },
+            {
+                id: '68-9',
+                year: '2568',
+                code: 'ข้อ 9 (ปี 68)',
+                docRef: 'สม 0701/63 ลว. 24 ธ.ค. 2568',
+                title: 'ส่งเสริมเทคโนโลยีพลังงานหมุนเวียน (แสงอาทิตย์ ลม ชีวมวล) เพื่อลดการปล่อยก๊าซเรือนกระจกและฝุ่น PM2.5 ในภาคอุตสาหกรรม',
+                recommendation: 'ให้ พน. อต. ทส. และหน่วยงานอื่นที่เกี่ยวข้อง ส่งเสริมเทคโนโลยีพลังงานหมุนเวียน เช่น พลังงานแสงอาทิตย์ พลังงานลม และชีวมวล เป็นต้น เพื่อลดการปล่อยก๊าซเรือนกระจกรวมถึงฝุ่น PM2.5 จากการเผาไหม้เชื้อเพลิงฟอสซิลในภาคอุตสาหกรรม',
+                agencies: ['พน.', 'อต.', 'ทส.', 'กษ.'],
+                status: 'partial',
+                progress: 60,
+                done: [
+                    'พน.: ดำเนิน 6 โครงการ เช่น โครงการนำร่องรับซื้อไฟฟ้าจากใบและยอดอ้อยไม่น้อยกว่า 30% อัตรา 2.85 บาท/หน่วย สัญญา 20 ปี (กำหนดจ่ายไฟ COD มี.ค. 2570), โครงการศึกษาชีวมวล 18 จังหวัด, โครงการไบโอมีเทน และมาตรการลดหย่อนภาษีติดตั้ง Solar Rooftop บ้านอยู่อาศัยไม่เกิน 200,000 บาท',
+                    'อต.: สอน. ส่งเสริมผลิตใบอ้อยอัดแท่ง (Sugar Cane Biscuit), ผงชีวมวล และไบโอชาร์ (Biochar); สมอ. ประกาศใช้ มอก./มตช. พลังงานหมุนเวียน 63 มาตรฐาน',
+                    'ทส.: ส่งเสริมโรงงานรับซื้อเศษวัสดุเกษตรไม่น้อยกว่า 5% ของเชื้อเพลิง และปรับปรุงมาตรฐานมลพิษจากหม้อน้ำ (Boiler)'
+                ],
+                gaps: [
+                    'โครงการรับซื้อไฟฟ้าจากใบอ้อยของ พน. ยังเป็นเพียงโครงการนำร่องและเริ่มจ่ายไฟเดือนมีนาคม 2570 ส่วนโครงการชีวมวล 18 จังหวัดยังเป็นขั้นศึกษาความเป็นไปได้',
+                    'ในเวที 16 ก.ย. 69 พบปัญหาว่าพื้นที่นำร่อง จ.สระบุรี ต้องการติดตั้งโซลาร์เซลล์บนหลังคาและโซลาร์ลอยน้ำเพื่อขายไฟส่วนเกินให้เอกชน แต่ติดขัดมติ ครม. เดือนธันวาคม 2546 (อายุ 23 ปี) ที่ยังไม่ถูกปลดล็อก',
+                    'ระเบียบส่งเสริมการลงทุนของ BOI ปัจจุบันรับรองเฉพาะ "อบต." เป็นผู้รับสิทธิประโยชน์ ยังไม่รับรอง "คณะกรรมการป่าชุมชน" เป็นผู้รับการสนับสนุนโดยตรงจากภาคเอกชน'
+                ]
+            },
+            {
+                id: '68-10',
+                year: '2568',
+                code: 'ข้อ 10 (ปี 68)',
+                docRef: 'สม 0701/63 ลว. 24 ธ.ค. 2568',
+                title: 'กำหนดมาตรการด้านสาธารณสุขคุ้มครองประชาชนและกลุ่มเสี่ยง จัดหาอุปกรณ์ป้องกันที่เข้าถึงง่าย และปรับรูปแบบการเรียน/การทำงานช่วงฝุ่นสูง',
+                recommendation: 'ให้ สธ. ศธ. พม. มท. และหน่วยงานอื่นที่เกี่ยวข้อง กำหนดมาตรการด้านสาธารณสุขเพื่อคุ้มครองประชาชน รวมถึงกลุ่มเสี่ยง อาทิ เด็กเล็ก ผู้สูงอายุ หญิงตั้งครรภ์ และผู้ป่วยโรคประจำตัว โดยจัดหาอุปกรณ์ป้องกันที่เข้าถึงง่ายและมีประสิทธิภาพ รวมทั้งการปรับรูปแบบการเรียนการสอนในช่วงที่ค่าฝุ่น PM2.5 สูง',
+                agencies: ['สธ.', 'ศธ.', 'พม.', 'มท.'],
+                status: 'partial',
+                progress: 65,
+                done: [
+                    'สธ.: ขยายห้องปลอดฝุ่นสะสม 30,412 ห้อง (74 จังหวัด), สนับสนุน "มุ้งสู้ฝุ่น" แก่ผู้ป่วยติดเตียง 6,619 ชุด, คลินิกมลพิษ 327 แห่ง, อสม. เยี่ยมบ้านกลุ่มเปราะบาง 12.97 ล้านคน, แจกหน้ากาก 6.21 ล้านชิ้น (เป็น N95 1.78 ล้านชิ้น)',
+                    'ศธ.: ตั้งศูนย์ประสานงานเฝ้าระวังฯ กำหนดเกณฑ์ปฏิบัติ 5 ระดับสี และให้อำนาจปิดสถานศึกษาตามระเบียบ',
+                    'พม.: ใช้ฐานข้อมูล MSO-Logbook ดูแลกลุ่มเปราะบาง และร่วมกับรองนายกฯ (คำสั่ง 18 เม.ย. 69) ติดตั้งห้องปลอดฝุ่นแรงดันบวกครบวงจรในศูนย์เด็กเล็กและพื้นที่กลุ่มเปราะบาง 83 แห่ง (ขณะที่มี มช. ดำเนินการเองเกือบ 1,000 แห่ง)'
+                ],
+                gaps: [
+                    'ติดระเบียบกองทุนหลักประกันสุขภาพท้องถิ่น (สปสช.-อปท.): ท้องถิ่นมีเงินกองทุนสุขภาพตำบลเฉลี่ย 300,000 - 1,000,000 บาท/ตำบล แต่ระเบียบไม่อนุญาตให้เบิกไปซื้อหน้ากาก N95 มุ้งสู้ฝุ่น (ราคา 1,200-1,500 บาท) หรือทำห้องปลอดฝุ่นให้โรงเรียน/ศูนย์เด็กเล็กได้โดยตรง',
+                    'การแจกหน้ากากล่าช้าและไม่เพียงพอ: กระบวนการแจกผ่านลำดับชั้นราชการ (อบจ. -> จังหวัด -> อำเภอ -> เทศบาล -> ผู้ใหญ่บ้าน -> อสม.) ใช้เวลานานราว 1 สัปดาห์ และประชาชนได้รับเฉลี่ยเพียง 4 ชิ้น/คน ตลอดทั้งฤดูฝุ่น',
+                    'พม. รายงานต่อ ครม. ว่ากลุ่มเปราะบาง (คนพิการ ผู้สูงอายุ เด็กเล็ก) ยังตกหล่นการแจ้งเตือน และประเทศไทยยังไม่มีมาตรการ Work From Home (WFH) สำหรับวัยแรงงานที่ชัดเจนร่วมกับภาคเอกชน',
+                    'ยังมีการทำกิจกรรมเชิงสัญลักษณ์ที่ขัดหลักวิชาการแพทย์ เช่น การพ่นละอองน้ำในที่โล่งที่ไม่ได้ผลจริง หรือการจัดวิ่งมาราธอน/ออกกำลังกายกลางแจ้งในช่วงวิกฤตฝุ่น'
+                ]
+            },
+            {
+                id: '68-11',
+                year: '2568',
+                code: 'ข้อ 11 (ปี 68)',
+                docRef: 'สม 0701/63 ลว. 24 ธ.ค. 2568',
+                title: 'ผลักดันความร่วมมืออาเซียน (ACC THPC) ลดการเผาในประเทศต้นทาง และกำหนดมาตรการคัดกรอง/ควบคุมการนำเข้าสินค้าเกษตรที่เกี่ยวข้องกับการเผา',
+                recommendation: 'ให้ กต. ทส. พณ. และหน่วยงานอื่นที่เกี่ยวข้อง ผลักดันความร่วมมือระหว่างประเทศภายใต้กลไกศูนย์ประสานงานอาเซียนว่าด้วยมลพิษทางอากาศข้ามพรมแดน (ACC THPC) ทั้งในด้านการแลกเปลี่ยนข้อมูล การเฝ้าระวังร่วม และการพัฒนามาตรการลดการเผาในประเทศต้นทาง รวมถึงกำหนดมาตรการคัดกรองหรือควบคุมการนำเข้าสินค้าเกษตรที่มีส่วนเกี่ยวข้องกับการเผา',
+                agencies: ['กต.', 'ทส.', 'พณ.', 'กษ.'],
+                status: 'partial',
+                progress: 65,
+                done: [
+                    'กต. / ทส.: ขับเคลื่อนยุทธศาสตร์ฟ้าใส (CLEAR Sky Strategy 2024-2030) จัดประชุมที่ จ.เชียงราย (4 ธ.ค. 68) และประชุม Joint Task Force ครั้งที่ 2 ณ เวียงจันทน์ สปป.ลาว (21-22 ม.ค. 69)',
+                    'พณ.: ออกประกาศกระทรวงพาณิชย์ ลว. 30 ธ.ค. 2568 (มีผล 1 ม.ค. 2569) และประกาศกรมการค้าต่างประเทศ ลว. 9 ม.ค. 2569 กำหนดให้ผู้นำเข้าข้าวโพดเลี้ยงสัตว์ต้องขึ้นทะเบียนและแสดงหนังสือรับรองว่าปลอดการเผาต่อกรมศุลกากร พร้อมแจ้งสถานทูต 12 ประเทศ',
+                    'กษ.: ร่างคำสั่งตั้งคณะอนุกรรมการพิจารณาตรวจสอบย้อนกลับการนำเข้าข้าวโพดเลี้ยงสัตว์ (Post-Audit)'
+                ],
+                gaps: [
+                    'ช่องโหว่ช่วงเวลานำเข้าภาษี 0%: ข้อมูลจากเวที มช. (อ.แม่สาย และ จ.เชียงราย) ชี้ว่าประกาศกระทรวงพาณิชย์ที่เปิดให้นำเข้าข้าวโพดเลี้ยงสัตว์อัตราภาษี 0% ตั้งแต่วันที่ 1 ก.พ. - 31 ส.ค. ของทุกปี เป็นแรงจูงใจโดยตรงให้เกิดการเผาแปลงเกษตรขนาดใหญ่ในรัฐฉานและ สปป.ลาว ในช่วงเดือน พ.ย. - ธ.ค. เพื่อเตรียมผลผลิตส่งเข้าไทย',
+                    'ความร่วมมือแบบรัฐต่อรัฐ (G2G) ไม่สามารถเข้าถึงพื้นที่ของชนกลุ่มน้อย/เขตปกครองพิเศษในเมียนมาได้ ขณะที่ความร่วมมือระดับประชาชนสองแผ่นดิน (People-to-People) เช่น คู่หมู่บ้านชายแดนแม่สะเรียง-แม่สอด และแนวกันไฟภูชี้ฟ้า-ผาตั้ง (อ.เวียงแก่น จ.เชียงราย) ได้ผลจริงแต่ยังไม่ได้รับการรับรองและงบสนับสนุนจากรัฐ',
+                    'การรับซื้อสินค้าป่าไม้ทางเลือกเพื่อลดการเผาจากชุมชนชายแดน (เช่น น้ำผึ้ง งาดำ) ยังติดขัดกฎระเบียบการระบุถิ่นกำเนิดสินค้านำเข้า'
+                ]
+            },
+            // 2566 Recommendations (8 Northern Provinces)
+            {
+                id: '66-1',
+                year: '2566',
+                code: 'ข้อ 3.1 (ปี 66)',
+                docRef: 'สม 0701/43 ลว. 11 ส.ค. 2566 (8 จว.ภาคเหนือ)',
+                title: 'ขจัดอุปสรรคการกระจายอำนาจไป อปท. ปรับปรุงการจัดสรรงบอุดหนุนโดยตรง และเพิ่มกลไกการมีส่วนร่วมใน 8 จังหวัดภาคเหนือ',
+                recommendation: 'ให้ศึกษาปัจจัยที่เป็นอุปสรรคในการกระจายอำนาจการบริหารจัดการสถานการณ์ไปยัง อปท. ปรับปรุงกระบวนการจัดสรรงบประมาณให้ อปท. ได้รับเงินอุดหนุนโดยตรงสำหรับภารกิจป้องกันและควบคุมไฟป่าที่เพียงพอ รวมทั้งเพิ่มกลไกการมีส่วนร่วมตาม พ.ร.บ. ปภ. 2550 และ พ.ร.ฎ. บริหารงานเชิงพื้นที่แบบบูรณาการ 2565',
+                agencies: ['มท.', 'ทส.', 'ก.พ.ร.'],
+                status: 'bottleneck',
+                progress: 30,
+                done: [
+                    'อบจ.เชียงใหม่ จัดสรรงบอุดหนุนตรงถึงระดับหมู่บ้านบางส่วนตั้งแต่ปี 2564 และมีการถ่ายโอนภารกิจไฟป่าให้ อปท. ตามประกาศปี 2567',
+                    'กรมป่าไม้อยู่ระหว่างยกร่าง "แผนการกระจายอำนาจ ฉบับที่ 3" เสนอคณะกรรมการการกระจายอำนาจฯ และ ครม. เพื่อปรับสมดุลภารกิจระหว่างกรมป่าไม้กับ อปท.'
+                ],
+                gaps: [
+                    'ผ่านมา 3 ปี (2566-2569) งบประมาณที่จัดสรรให้ อปท. ยังคงกระจัดกระจาย ไม่ทั่วถึง (บางหมู่บ้านได้จาก อบจ. บางหมู่บ้านไม่ได้เลย) และสัดส่วนการทำแผนพัฒนาจังหวัดยังมีข้าราชการถึง 80% ขณะที่ภาคประชาชนมีส่วนร่วมไม่ถึง 10% (ข้อมูลกลุ่มลำพูน)',
+                    'แนวกันไฟที่สร้างแล้วมักถูกปล่อยทิ้งทุกปี ไม่มีงบประมาณต่อเนื่องในการดูแลรักษา'
+                ]
+            },
+            {
+                id: '66-2',
+                year: '2566',
+                code: 'ข้อ 3.2 (ปี 66)',
+                docRef: 'สม 0701/43 ลว. 11 ส.ค. 2566 (8 จว.ภาคเหนือ)',
+                title: 'ทบทวนนโยบายห้ามเผาเด็ดขาดใน 8 จังหวัดภาคเหนือ และพัฒนาแอปพลิเคชัน Fire-D / Burn Check ให้เข้าถึงง่ายและแม่นยำ',
+                recommendation: 'ทบทวนนโยบายห้ามเผาเด็ดขาด โดยพิจารณาความเหมาะสมที่คำนึงถึงบริบทเชิงพื้นที่และความจำเป็นของประชาชนที่ประกอบอาชีพเกษตรกรรม ตลอดจนพัฒนาแอปพลิเคชัน Fire-D และ Burn Check ให้ใช้งานสะดวก มีประสิทธิภาพ และถูกต้องแม่นยำ',
+                agencies: ['ทส.', 'มท.', 'กษ.', 'ดศ.'],
+                status: 'partial',
+                progress: 50,
+                done: [
+                    'มีการใช้ระบบ Fire-D ในเชียงใหม่ และ Burn Check ของ ทส./GISTDA ร่วมกับการจัดทำแผนบริหารจัดการเชื้อเพลิงระดับจังหวัด',
+                    'เกิดพื้นที่ต้นแบบ เช่น "แม่ทาโมเดล" (อ.แม่ออน) และ "แม่แจ่มโมเดลพลัส" รวมถึง MOU ร่วมระหว่างอุทยานแห่งชาติดอยสุเทพ-ปุย กับชุมชนแม่สาน้อยที่ช่วยลดการปะทะและลดไฟป่าได้จริง'
+                ],
+                gaps: [
+                    'ส่วนกลางยังคงสั่งการห้ามเผาเด็ดขาดแบบเหมารวม (Top-down Zero Burning) ทับซ้อนแผนของพื้นที่ และยังไม่มีกลไกคุ้มครองความรับผิดทางกฎหมายให้แก่ผู้ว่าราชการจังหวัดและเจ้าหน้าที่เมื่ออนุญาตให้บริหารจัดการเชื้อเพลิง (Prescribed Burning)'
+                ]
+            },
+            {
+                id: '66-3',
+                year: '2566',
+                code: 'ข้อ 3.3 (ปี 66)',
+                docRef: 'สม 0701/43 ลว. 11 ส.ค. 2566 (8 จว.ภาคเหนือ)',
+                title: 'จัดทำตัวชี้วัดที่ทุกภาคส่วนเห็นพ้องต้องกัน (Common Indicator) ทั้งด้านกฎหมาย กระบวนการ/สวัสดิการอาสาสมัคร และผลลัพธ์',
+                recommendation: 'ให้ ก.พ.ร. มท. ทส. กค. และ สงป. พิจารณาจัดทำตัวชี้วัดที่ทุกภาคส่วนเห็นพ้องต้องกัน (Common Indicator) ภายใต้แผนปฏิบัติราชการประจำปี ครอบคลุมด้านกฎหมายและนโยบาย ด้านกระบวนการ (เช่น อุปกรณ์ความปลอดภัยและสวัสดิการอาสาสมัคร) และด้านผลลัพธ์',
+                agencies: ['ก.พ.ร.', 'มท.', 'ทส.'],
+                status: 'bottleneck',
+                progress: 25,
+                done: [
+                    'สขญ. (BDI) จัดทำต้นแบบแดชบอร์ดตัวชี้วัดรายจังหวัดในระบบ Envi Link และ วช./มช. พัฒนาตัวชี้วัดตามกรอบ 4P ในเชียงใหม่'
+                ],
+                gaps: [
+                    'ภาครัฐยังคงใช้ "จำนวนจุดความร้อน (Hotspot)" เป็นตัวชี้วัดหลักในการประเมินผลผู้ว่าฯ และหน่วยงาน ซึ่งไม่สะท้อน "พื้นที่เผาไหม้จริง (Burnt Scar)" (เช่น เชียงใหม่มีจุดความร้อนอันดับ 2 แต่มีพื้นที่เผาไหม้จริงอันดับ 4 รองจากลำปาง แม่ฮ่องสอน แพร่) และทำให้พื้นที่หลบเลี่ยงด้วยการแอบเผาหรือใช้สารเคมีแทน',
+                    'อาสาสมัครและเจ้าหน้าที่ดับไฟป่ายังขาดสวัสดิการ ประกันภัย และอุปกรณ์คุ้มครองความปลอดภัยที่ได้มาตรฐาน โดยยังคงมีผู้เสียชีวิตจากการดับไฟป่าเฉลี่ย 5-6 รายต่อปี'
+                ]
+            }
+        ];
+
+        // 2. INITIAL ADDITIONAL PROPOSALS 2569 (24 Items: 5 Reiterated + 15 from 5 Pillars + 4 Stop-Doing)
+        const initialAdditionalProposals = [
+            // หมวด A: ข้อเสนอย้ำสิ่งที่ยังไม่ทำ (5 ข้อ)
+            {
+                id: 'add-r1',
+                category: 'reiterated',
+                priority: 'เร่งด่วนที่สุด (ก่อนฤดูฝุ่นปี 2570)',
+                title: 'ย้ำการจัดสรรงบอุดหนุนตรงให้ อปท. แก้ระเบียบค่าตอบแทนอาสาดับไฟ (240 บาท/12 ชม.) และสร้างความชัดเจนร่วมกับ สตง./กรมบัญชีกลาง',
+                detail: 'ให้ มท. สำนักงบประมาณ และกรมบัญชีกลาง เร่งจัดสรรงบประมาณอุดหนุนตรงให้แก่ อปท. ที่รับถ่ายโอนภารกิจไฟป่าให้สอดคล้องกับขนาดพื้นที่และความเสี่ยง (จากปัจจุบันที่ได้เพียงหลักหมื่นบาท) พร้อมทั้งแก้ไขระเบียบการเบิกจ่ายค่าตอบแทนอาสาสมัครดับไฟป่าให้ยืดหยุ่นและเป็นธรรม (ยกเลิกเงื่อนไขต้องทำงานครบ 12 ชม. จึงเบิกได้ 240 บาท) และเชิญกรมบัญชีกลางกับ สตง. ร่วมกำหนดแนวทางจัดซื้ออุปกรณ์ป้องกันฝุ่น/ไฟป่าที่ชัดเจนเพื่อให้ท้องถิ่นปฏิบัติงานได้โดยไม่ต้องกังวลว่าจะถูกเรียกเงินคืน',
+                agencies: 'มท. (สถ.), สงป., กค. (กรมบัญชีกลาง), ทส.',
+                ref: 'ย้ำข้อเสนอข้อ 4 (ปี 68) และข้อ 3.1 (ปี 66) / เวที มช. 15-16 ก.ย. 69',
+                response: 'กรมป่าไม้แจ้งว่าอยู่ระหว่างยกร่าง "แผนการกระจายอำนาจ ฉบับที่ 3" เสนอ ครม. และที่ประชุม 16 ก.ย. 69 ตกลงจะเชิญกรมบัญชีกลางเข้าร่วมวงหารือ Sandbox เพื่อให้ความชัดเจนเรื่องหมวดงบและ TOR'
+            },
+            {
+                id: 'add-r2',
+                category: 'reiterated',
+                priority: 'เร่งด่วนที่สุด',
+                title: 'ย้ำการปรับหลักเกณฑ์ระบบจัดการไฟ (Burn Check/Fire-D) ให้รองรับ "ไร่หมุนเวียน" และแยกแยะไฟวัฒนธรรมออกจากไฟเกษตรในเขตป่า',
+                detail: 'ให้ ทส. กษ. และ มท. ปรับปรุงหลักเกณฑ์การขออนุญาตใช้ไฟจากเดิมที่จำกัดเฉพาะพืชเศรษฐกิจ 3 ชนิด (ข้าว ข้าวโพด อ้อย) ให้ครอบคลุมถึง "ไร่หมุนเวียน" ของชุมชนดั้งเดิมและการชิงเผาตามหลักวิชาการ (Prescribed Burning) โดยให้อำนาจข้อตกลงระดับชุมชน/ตำบลร่วมกลั่นกรอง และแยกแยะระหว่าง "ไฟตามวิถีวัฒนธรรม" (ไฟดีที่ขึ้นทะเบียนและควบคุมได้) กับ "ไฟเกษตรรุกป่า/ไฟล่าสัตว์" บนฐานข้อมูลวิทยาศาสตร์อย่างชัดเจน',
+                agencies: 'ทส., กษ., มท.',
+                ref: 'ย้ำข้อเสนอข้อ 5 (ปี 68) และข้อ 3.2 (ปี 66) / เวที มช. 15-16 ก.ย. 69',
+                response: 'ผู้แทนรองนายกฯ และหน่วยงานกลางชี้แจงเมื่อ 16 ก.ย. 69 ว่าร่างกฎหมายอากาศสะอาดและกรอบ Sandbox รับรองการใช้ไฟ 3 กรณี คือ พื้นที่เกษตรช่วงปรับโครงสร้าง ไร่หมุนเวียน และกรณีโรคระบาด โดยคุ้มครองผู้ขึ้นทะเบียน "ไฟดี"'
+            },
+            {
+                id: 'add-r3',
+                category: 'reiterated',
+                priority: 'เร่งด่วนที่สุด',
+                title: 'ย้ำการทบทวนเกณฑ์ประกาศเขตภัยพิบัติของ ปภ. (125 มคก./ลบ.ม. 5 วัน) และการกำหนดมาตรการ Work From Home ร่วมกับภาคเอกชน',
+                detail: '1) ให้ มท. (ปภ.) และกระทรวงการคลัง ทบทวนหลักเกณฑ์การประกาศเขตการให้ความช่วยเหลือผู้ประสบภัยพิบัติกรณีฉุกเฉินกรณี PM2.5 จากเดิมที่กำหนดไว้สูงถึง 125 มคก./ลบ.ม. ติดต่อกัน 5 วัน ให้ลดลงมาสอดคล้องกับเกณฑ์ที่มีผลกระทบต่อสุขภาพอย่างรุนแรง และให้อำนาจท้องถิ่น/จังหวัดประกาศได้โดยไม่ปกปิดข้อมูลเพื่อรักษาภาพลักษณ์การท่องเที่ยว\n2) ให้ ครม. กำหนดแนวทางปฏิบัติเรื่อง Work From Home และการปรับรูปแบบการเรียนการสอนที่ชัดเจนร่วมกับภาคธุรกิจเอกชน ตามข้อสังเกตของกระทรวง พม.',
+                agencies: 'ครม., มท. (ปภ.), กค., พม., สธ., ศธ.',
+                ref: 'ย้ำข้อเสนอข้อ 2 และข้อ 10 (ปี 68) / เวที มช. 15-16 ก.ย. 69',
+                response: 'ที่ประชุมเวทีถอดบทเรียน 15-16 ก.ย. 69 สนับสนุนให้ปลดล็อกกลไกการประกาศเขตช่วยเหลือผู้ประสบภัยพิบัติและการเข้าถึงงบช่วยเหลือกลุ่มเปราะบางโดยตรง'
+            },
+            {
+                id: 'add-r4',
+                category: 'reiterated',
+                priority: 'เร่งด่วน',
+                title: 'ย้ำการยกระดับมาตรฐาน EURO 6 ในรถยนต์ดีเซล การบังคับใช้ CEMS ให้ครบ 100% และการติดตั้งเครื่องวัดโอโซน (O3) ในสถานีหลัก',
+                detail: '1) ให้ ทส. และ อต. กำหนดกรอบเวลาบังคับใช้มาตรฐานไอเสีย EURO 6 ในรถยนต์เครื่องยนต์ดีเซลทุกขนาด (จากปัจจุบันที่บังคับใช้เฉพาะรถเบนซิน) เพื่อลดก๊าซต้นตอของฝุ่นทุติยภูมิและสารก่อมะเร็ง\n2) เร่งรัดให้โรงงานที่เข้าข่ายต้องติด CEMS อีก 226 โรงงาน เชื่อมต่อระบบ POMS โดยเร็ว\n3) จัดสรรงบประมาณบำรุงรักษาสถานีตรวจวัดอากาศของ คพ. ให้เพียงพอ และติดตั้งเซนเซอร์วัดก๊าซโอโซน (O3) และพารามิเตอร์หลักให้ครบถ้วนในสถานีหลัก (Core Station) ทุกจังหวัดรวมถึงเชียงใหม่',
+                agencies: 'ทส. (คพ.), อต., คค., สงป.',
+                ref: 'ย้ำข้อเสนอข้อ 3, 6 และ 7 (ปี 68) / เวที มช. 15-16 ก.ย. 69',
+                response: 'คพ. ชี้แจงแนวทางจัดทำสถานีหลัก (Core Station) วัดครบพารามิเตอร์เสริมด้วยเซนเซอร์ต้นทุนต่ำมาตรฐานร่วม และ NARIT สนับสนุนการตรวจวัดสารตั้งต้นฝุ่นทุติยภูมิ'
+            },
+            {
+                id: 'add-r5',
+                category: 'reiterated',
+                priority: 'เร่งด่วน',
+                title: 'ย้ำการเปลี่ยนตัวชี้วัดราชการจากการนับ "จุดความร้อน" สู่การวัด "พื้นที่เผาไหม้จริงและคุณภาพอากาศ" (Common Indicator)',
+                detail: 'ให้ ก.พ.ร. ทส. และ มท. ปรับเปลี่ยนตัวชี้วัดความสำเร็จ (KPI) จากเดิมที่ใช้จำนวนจุดความร้อน (Hotspot) เพียงอย่างเดียว (ซึ่งใช้สำหรับแจ้งเหตุเท่านั้น) ไปสู่ตัวชี้วัดร่วม (Common Indicator) ที่ประเมินจากสัดส่วนพื้นที่เผาไหม้จริง (Burnt Scar) ข้อมูลนิติวิทยาศาสตร์ ทิศทางลม องค์ประกอบความเป็นพิษของฝุ่นในแต่ละพื้นที่ และความปลอดภัยของผู้ปฏิบัติงาน',
+                agencies: 'ก.พ.ร., ทส., มท., อว.',
+                ref: 'ย้ำข้อเสนอข้อ 3.3 (ปี 66) / เวที มช. 15-16 ก.ย. 69',
+                response: 'ผู้แทนรองนายกฯ (16 ก.ย. 69) เห็นชอบการปรับไปใช้ตัวชี้วัดแบบผสมเชิงพื้นที่และยืดหยุ่น เนื่องจากองค์ประกอบฝุ่นใน กทม. และภาคเหนือมีความเป็นพิษแตกต่างกัน'
+            },
+
+            // หมวด B: ข้อเสนอแนะใหม่เชิงโครงสร้าง 5 เสาหลักยุทธศาสตร์ (15 ข้อ)
+            // เสาหลักที่ 1: Governance & Sandbox (4 ข้อ)
+            {
+                id: 'add-p1-1',
+                category: 'pillar1',
+                priority: 'เร่งด่วนที่สุด (เริ่ม 21 ก.ย. เสนอ ครม. พ.ย. 69)',
+                title: '[เสาหลัก 1.1] จัดตั้งโมเดล “ผู้ว่าราชการจังหวัด CEO Sandbox” ใน 4 พื้นที่นำร่อง (เชียงใหม่ น่าน สระบุรี กทม.)',
+                detail: 'ประกาศให้จังหวัดวิกฤต ได้แก่ เชียงใหม่ น่าน สระบุรี และกรุงเทพมหานคร เป็นพื้นที่ทดลองนวัตกรรมบริหารงาน (Sandbox) ด้านไฟป่าและฝุ่นควัน โดยใช้มติ ครม. ให้อำนาจผู้ว่าราชการจังหวัดบูรณาการงบประมาณเชิงพื้นที่ (Agenda-based) และอนุมัติโครงการข้ามกระทรวงได้จริง พร้อมทั้งมีกลไกคุ้มครองผู้ว่าฯ และเจ้าหน้าที่ผู้ปฏิบัติงานตามแผนร่วมของจังหวัดมิให้ถูกเอาผิดทางวินัย/การเงินหากแตกต่างจากระเบียบปกติ',
+                agencies: 'ครม., มท., ทส., สงป., จังหวัดนำร่อง 4 แห่ง',
+                ref: 'เสาหลักที่ 1 ข้อเสนอต่อรองนายกฯ (16 ก.ย. 69) และเวทีเสวนา 6 พ.ค. 69',
+                response: 'ตอบรับดำเนินการทันที: คณะทำงานระดับชาติกำหนดเริ่ม Kick-off ที่เชียงใหม่ 21 ก.ย. 69 ต่อด้วยน่านและสระบุรี โดยให้แต่ละพื้นที่คัดเลือกข้อเสนอไม่เกิน 5 เรื่องเพื่อเสนอ ครม. ภายในเดือนพฤศจิกายน 2569'
+            },
+            {
+                id: 'add-p1-2',
+                category: 'pillar1',
+                priority: 'เร่งด่วน (ระยะยาว 10 ปี)',
+                title: '[เสาหลัก 1.2] จัดตั้งหน่วยงานขับเคลื่อนเชิงยุทธศาสตร์ระยะยาว (Think Tank 10 ปี) ที่ไม่ผูกติดกับการเมือง',
+                detail: 'ให้กระทรวงการอุดมศึกษา วิทยาศาสตร์ วิจัยและนวัตกรรม (อว.) ร่วมกับ NARIT, วช. และมหาวิทยาลัยในพื้นที่ จัดตั้งหน่วยงานขับเคลื่อนเชิงยุทธศาสตร์ที่ทำงานเต็มเวลาต่อเนื่องอย่างน้อย 10 ปี เพื่อทำหน้าที่ประสานข้อมูลวิทยาศาสตร์ บริหารโครงการข้ามกระทรวง และกำกับทิศทางนโยบายต่อเนื่องโดยไม่สะดุดตามการเปลี่ยนแปลงทางการเมืองหรือรอยต่อปีงบประมาณ',
+                agencies: 'อว., สดร. (NARIT), วช., ครม.',
+                ref: 'เสาหลักที่ 1 ข้อเสนอต่อรองนายกฯ (16 ก.ย. 69)',
+                response: 'ผู้แทนรองนายกฯ (ผอ. NARIT) เห็นด้วยและเสนอให้ขยายกรอบเวลาจากข้อเสนอเดิม 2 ปี เป็นอย่างน้อย 10 ปี โดย NARIT ซึ่งมีสำนักงานใหญ่ที่เชียงใหม่พร้อมเป็นแกนกลางร่วมกับพื้นที่'
+            },
+            {
+                id: 'add-p1-3',
+                category: 'pillar1',
+                priority: 'เร่งด่วนที่สุด',
+                title: '[เสาหลัก 1.3] ปรับสถาปัตยกรรมเวลาสู่โมเดล “8-3-1” และเปลี่ยนจาก Zero Burning เป็น Prescribed Burning ที่มีโควตาพื้นที่ชัดเจน',
+                detail: 'เปลี่ยนจากการตั้งรับเฉพาะหน้าสู่ระบบ “8-3-1” (8 เดือนเตรียมการป้องกัน/ปรับโครงสร้างการผลิต/อุดหนุนจุดขาดทุนค่าจัดการฟางและชีวมวล, 3 เดือนเผชิญเหตุและบริหารจัดการไฟตามกติกา, 1 เดือนฟื้นฟูและถอดบทเรียน) โดยใช้จังหวัดเชียงใหม่เป็นต้นแบบกำหนดเพดานพื้นที่ใช้ไฟภายใต้การควบคุม (Prescribed Burning) ในกรอบ 400,000 – 700,000 ไร่/ปี (แบ่งเป็นไร่หมุนเวียน 120,000 ไร่, พื้นที่เกษตรสูง 180,000 ไร่ และชิงเผาจัดการเชื้อเพลิง 300,000 ไร่) พร้อมเปิดเผยปฏิทินการใช้ไฟต่อสาธารณะ',
+                agencies: 'ครม., ทส., กษ., มท., จังหวัดภาคเหนือ',
+                ref: 'เสาหลักที่ 1 ข้อเสนอต่อรองนายกฯ (16 ก.ย. 69) และแผนยุทธศาสตร์ 5 ปี จ.เชียงใหม่',
+                response: 'วช. และ มช. ตั้งศูนย์ติดตามประเมินผลตามแผนนี้ในเชียงใหม่แล้ว และกำลังขยายผลผู้จัดการพื้นที่วิชาการไปครบทั้ง 9 จังหวัดภาคเหนือตอนบน พร้อมแจ้งเตือนรับมือปี Super El Niño ในปีถัดไป'
+            },
+            {
+                id: 'add-p1-4',
+                category: 'pillar1',
+                priority: 'เร่งด่วน',
+                title: '[เสาหลัก 1.4] กำหนดเป้าหมายลดฝุ่น PM2.5 และ Black Carbon รายภาคส่วน (เทียบเคียง NDC) กระจายให้ กษ. คค. และ อต. ร่วมรับผิดชอบ',
+                detail: 'กำหนดเป้าหมายการลดมลพิษ PM2.5 และคาร์บอนดำ (Black Carbon) ในลักษณะเดียวกับเป้าหมายการลดก๊าซเรือนกระจกของประเทศ (NDC) โดยกระจายตัวชี้วัดเชิงปริมาณและภาระงบประมาณไปยังกระทรวงต้นทาง ได้แก่ กระทรวงเกษตรและสหกรณ์ กระทรวงคมนาคม และกระทรวงอุตสาหกรรม ให้รับผิดชอบลดมลพิษจากแหล่งกำเนิดในสังกัดตนเอง แทนการผลักภาระให้ ทส. เพียงกระทรวงเดียว',
+                agencies: 'ครม., กษ., คค., อต., ทส., ก.พ.ร.',
+                ref: 'เสาหลักที่ 1 ข้อเสนอต่อรองนายกฯ (16 ก.ย. 69)',
+                response: 'รับข้อเสนอเข้าสู่กรอบการบูรณาการเชิงยุทธศาสตร์ระดับชาติ และเสนอทำพื้นที่นำร่อง 2 ปีใน 3 พื้นที่ (ป่าอนุรักษ์สำคัญ, รัศมี 50 กม. รอบโรงไฟฟ้าชีวมวล และ 4 จังหวัดเขตควบคุมมลพิษ)'
+            },
+
+            // เสาหลักที่ 2: Open Data, Tech & Anti-Corruption (3 ข้อ)
+            {
+                id: 'add-p2-1',
+                category: 'pillar2',
+                priority: 'เร่งด่วน',
+                title: '[เสาหลัก 2.1] บังคับใช้มาตรฐานข้อมูลเปิดจัดซื้อจัดจ้าง (Open Contracting) และใช้ AI ตรวจสอบความโปร่งใสงบฝุ่นและไฟป่า',
+                detail: 'เชื่อมโยงฐานข้อมูลการจัดสรรงบประมาณและการจัดซื้อจัดจ้างด้านการป้องกันและแก้ไขปัญหาไฟป่าและฝุ่นละอองของกรมบัญชีกลาง สำนักงบประมาณ และหน่วยงานระดับพื้นที่เข้าสู่ระบบกลางตามมาตรฐาน Open Contracting และนำเทคโนโลยีปัญญาประดิษฐ์ (AI) มาตรวจสอบความโปร่งใส ความคุ้มค่า และการกระจายงบประมาณให้ถึงระดับชุมชนอย่างทั่วถึง',
+                agencies: 'กค. (กรมบัญชีกลาง), สงป., ดศ., ป.ป.ช.',
+                ref: 'เสาหลักที่ 2 ข้อเสนอต่อรองนายกฯ (16 ก.ย. 69)',
+                response: 'ที่ประชุมเห็นชอบหลักการ Open Data เป็นค่าเริ่มต้น (Open by Default) เพื่อสร้างความไว้วางใจระหว่างรัฐกับประชาชน'
+            },
+            {
+                id: 'add-p2-2',
+                category: 'pillar2',
+                priority: 'เร่งด่วนที่สุด',
+                title: '[เสาหลัก 2.2] บูรณาการข้อมูลดาวเทียมชุดเดียวกัน (Suomi + NOAA-20/21) และเปิดเผยข้อมูลแผนชิงเผา/มลพิษโรงงานแบบ Real-time',
+                detail: '1) ให้หน่วยงานรัฐ ภาคประชาชน และนักวิชาการ ตกลงใช้ชุดข้อมูลจุดความร้อนที่ผสานดาวเทียมหลายดวง (Suomi NPP และ NOAA-20/21) ด้วยระบบ AI อัตโนมัติเป็นชุดเดียวกัน และส่งพิกัดตรงถึงระดับตำบลผ่าน Google Maps พร้อมขยายผล "วอร์รูมจังหวัด" สู่ "วอร์รูมชุมชน"\n2) บังคับให้เปิดเผยข้อมูลแผนชิงเผา ปฏิทินงบประมาณ และข้อมูลการปล่อยมลพิษของโรงงานอุตสาหกรรมในพื้นที่ (เช่น เชียงใหม่กว่า 900 แห่ง) เป็นข้อมูลเปิดให้ประชาชนตรวจสอบได้แบบเรียลไทม์',
+                agencies: 'อว. (NARIT / GISTDA), ทส., อต., ดศ. (สขญ.)',
+                ref: 'เสาหลักที่ 2 ข้อเสนอต่อรองนายกฯ (16 ก.ย. 69)',
+                response: 'NARIT รายงานว่ากำลังใช้ AI Agent รวมข้อมูลดาวเทียมหลายดวงอัตโนมัติสำหรับฤดูฝุ่นปีหน้า และ GISTDA เตรียมเปิดตัวระบบเตือนภัยพิบัติครบวงจรในอีก 2 สัปดาห์'
+            },
+            {
+                id: 'add-p2-3',
+                category: 'pillar2',
+                priority: 'เร่งด่วนที่สุด (งบปี 2569 จัดสรรแล้ว)',
+                title: '[เสาหลัก 2.3] ขยายเครือข่ายเสากล้องตรวจจับความร้อนอัจฉริยะ (Thermal Machine Vision AI) และหอดูไฟอัจฉริยะ เชื่อมระบบ Cell Broadcast',
+                detail: 'ยกระดับการตรวจจับไฟป่าตั้งแต่ระยะเริ่มต้น (ลดเวลาจากรอคอยดาวเทียม 3-4 ชม. เหลือหลักนาที) ด้วยการติดตั้งกล้องอินฟราเรด AI (Thermal Machine Vision ของ NARIT และหอดูไฟอัจฉริยะ) บนเสาสัญญาณโทรคมนาคมในพื้นที่ป่า ซึ่งมองทะลุหมอกควันได้ในรัศมี 2-30 กม. ควบคู่กับโดรนลาดตระเวนอัตโนมัติ 24 ชม. และโดรนวัดสเปกตรัมความละเอียด 10 เมตร โดยเชื่อมสัญญาณแจ้งเตือนเข้ากับระบบ Cell Broadcast ของ ปภ. และเปิด API สาธารณะ',
+                agencies: 'อว. (NARIT), ทส. (กรมป่าไม้/อุทยานฯ), มท. (ปภ.), กสทช.',
+                ref: 'เสาหลักที่ 2 ข้อเสนอต่อรองนายกฯ (16 ก.ย. 69)',
+                response: 'ดำเนินการแล้วตามคำสั่งรองนายกฯ (18 เม.ย. 69): NARIT ติดตั้งกล้องแรก 27 ส.ค. และทดสอบที่แม่ฮ่องสอนเมื่อ 14 ก.ย. 69 งบปี 69 ได้รับแล้ว ตั้งเป้าขยายจาก 35 ต้น เป็น 50 ต้น (และ 200-300 ต้นในระยะต่อไป)'
+            },
+
+            // เสาหลักที่ 3: ปฏิรูปเขตป่า สิทธิที่ดิน คทช. & ป่าชุมชน (4 ข้อ)
+            {
+                id: 'add-p3-1',
+                category: 'pillar3',
+                priority: 'เร่งด่วนที่สุด (ภายใน 3-5 ปี)',
+                title: '[เสาหลัก 3.1] เร่งรัดสมุดสิทธิ์ดิจิทัล คทช. แก้ระเบียบ คทช. ให้รับรอง "ไร่หมุนเวียน" และจัดการพื้นที่ค้างจัดสรร 80,000 ไร่ใน อ.แม่แจ่ม',
+                detail: '1) ปลดล็อกงบประมาณจัดพิมพ์สมุดประจำตัว คทช. (ซึ่งในเชียงใหม่ทำเสร็จเพียง 20%) และปรับสู่ระบบ "สมุดสิทธิ์ดิจิทัล" ให้แล้วเสร็จภายใน 3-5 ปี\n2) แก้ไขระเบียบคณะกรรมการนโยบายที่ดินแห่งชาติ (คทช.) ให้รับรองระบบเกษตร "ไร่หมุนเวียน" เป็นการใช้ประโยชน์ที่ดินที่ถูกต้องตามภูมิปัญญาดั้งเดิม เพื่อปลดล็อกพื้นที่ค้างการจัดสรรสิทธิ์หลังปี 2557 (เช่น อ.แม่แจ่ม 80,000 ไร่)\n3) ให้ อปท. เป็นตัวกลางเชื่อมโยงข้อมูลและสนับสนุนการปรับเปลี่ยนพื้นที่ปลูกข้าวโพดในเขตลุ่มน้ำชั้น 1-2 (กว่า 100,000 ไร่) ไปสู่โมเดลกาแฟผสมผสานไม้เศรษฐกิจและวนเกษตรที่ใช้น้ำน้อย',
+                agencies: 'คทช., ทส., มท. (อปท.), กษ.',
+                ref: 'เสาหลักที่ 3 ข้อเสนอต่อรองนายกฯ (16 ก.ย. 69)',
+                response: 'ที่ประชุม 16 ก.ย. 69 เห็นพ้องให้นำประเด็นการแก้ระเบียบ คทช. และการปรับเปลี่ยนพืชเศรษฐกิจบนพื้นที่สูงเข้าสู่กลไกขับเคลื่อนของพื้นที่นำร่องเชียงใหม่'
+            },
+            {
+                id: 'add-p3-2',
+                category: 'pillar3',
+                priority: 'เร่งด่วน',
+                title: '[เสาหลัก 3.2] ทดลองบังคับใช้ "มาตรา 64 ฉบับปรับปรุง" ในกรอบ Sandbox เชียงใหม่ และขับเคลื่อนมาตรา 65 พ.ร.บ.อุทยานแห่งชาติฯ',
+                detail: 'เนื่องจากกว่า 60% ของจุดความร้อนซ้ำซากเกิดในเขตป่าอนุรักษ์ที่มีความขัดแย้งด้านสิทธิที่ทำกิน จึงเสนอให้นำรูปแบบ "มาตรา 64 ฉบับปรับปรุง" มาทดลองใช้ในกรอบ Sandbox จังหวัดเชียงใหม่ (ภายหลังจังหวัดเคยยื่นคำร้องต่อศาลปกครอง) ควบคู่กับการขับเคลื่อนมาตรา 65 แห่ง พ.ร.บ. อุทยานแห่งชาติ พ.ศ. 2562 เพื่อจัดทำกติการ่วมในการใช้ประโยชน์ป่าอนุรักษ์อย่างยั่งยืน และพัฒนาแบรนด์สินค้าสิ่งบ่งชี้ทางภูมิศาสตร์ (GI) เช่น น้ำผึ้งป่า เพื่อสร้างรายได้ให้ชุมชนผู้รักษาป่า',
+                agencies: 'ทส. (กรมอุทยานฯ), ครม., พณ., จังหวัดเชียงใหม่',
+                ref: 'เสาหลักที่ 3 ข้อเสนอต่อรองนายกฯ (16 ก.ย. 69)',
+                response: 'ที่ประชุมเชิงปฏิบัติการ 16 ก.ย. 69 รับข้อเสนอการทดลอง "มาตรา 64 ฉบับปรับปรุง" เป็นหนึ่งในวาระพิจารณาของ Sandbox จังหวัดเชียงใหม่'
+            },
+            {
+                id: 'add-p3-3',
+                category: 'pillar3',
+                priority: 'เร่งด่วน (เป้าหมาย 5 ปี)',
+                title: '[เสาหลัก 3.3] ยกระดับป่าชุมชนจากเกรด C สู่เกรด A ตั้งเป้าขยายพื้นที่ป่าชุมชนจังหวัดเชียงใหม่สู่ 2 ล้านไร่ ภายใน 5 ปี (แม่ทาโมเดล)',
+                detail: 'เร่งรัดการขึ้นทะเบียนป่าชุมชนในพื้นที่ป่าสงวนฯ (เชียงใหม่มีศักยภาพขยายจาก 700,000-800,000 ไร่ ไปสู่เป้าหมาย 2 ล้านไร่ภายใน 5 ปี โดยเพิ่ม 1 ล้านไร่ใน 2 ปีแรก) พร้อมกำหนดให้คณะกรรมการป่าชุมชนประจำจังหวัดประชุมอย่างน้อย 4-5 ครั้ง/ปี และตั้งคณะทำงานย่อยระดับพื้นที่ เพื่อยกระดับแผนจัดการไฟป่าชุมชนจากเกรด C สู่เกรด A ตามต้นแบบ "แม่ทาโมเดล" เพื่อให้สามารถรับเงินอุดหนุนตรงจาก อบจ. และเข้าถึงกองทุนคาร์บอนเครดิตได้',
+                agencies: 'ทส. (กรมป่าไม้), มท. (อบจ./อปท.), ก.พ.ร., คณะกรรมการป่าชุมชนจังหวัด',
+                ref: 'เสาหลักที่ 3 ข้อเสนอต่อรองนายกฯ (16 ก.ย. 69)',
+                response: 'ผู้ตรวจราชการและผู้แทนกรมป่าไม้สนับสนุนเป้าหมายยกระดับป่าชุมชน 600 แห่งสู่เกรด A และขยายพื้นที่สู่ 2 ล้านไร่ภายใน 5 ปี'
+            },
+            {
+                id: 'add-p3-4',
+                category: 'pillar3',
+                priority: 'เร่งด่วนที่สุด',
+                title: '[เสาหลัก 3.4] จัดตั้งและขึ้นทะเบียนชุดปฏิบัติการ “สิงห์ไฟ” ประจำ อปท. (12 คน/ตำบล) ฝึกอบรมโดย “เสือไฟ” กรมป่าไม้ พร้อมประกันภัย',
+                detail: 'แก้ปัญหาการขาดแคลนเจ้าหน้าที่ดับไฟป่า (ซึ่งกรมป่าไม้มีเพียง 250 คนทั่วประเทศ) ด้วยการจัดตั้งและขึ้นทะเบียนชุดปฏิบัติการระดับท้องถิ่น (“สิงห์ไฟ” หรือเหยี่ยวไฟท้องถิ่น) ประจำ อปท. ทีมละ 12 คนต่อตำบล โดยให้หน่วย “เสือไฟ” ของกรมป่าไม้ทำหน้าที่เป็นครูฝึกทักษะยุทธวิธีและความปลอดภัย พร้อมปรับรูปแบบการจ้างงานให้เป็นอาชีพเต็มเวลาในช่วงวิกฤต มีอุปกรณ์มาตรฐาน และมีระบบประกันภัย/ความคุ้มครองความรับผิดแก่ผู้ปฏิบัติงานและผู้นำชุมชน',
+                agencies: 'มท. (อปท.), ทส. (กรมป่าไม้), สงป.',
+                ref: 'เสาหลักที่ 3 ข้อเสนอต่อรองนายกฯ (16 ก.ย. 69)',
+                response: 'กรมป่าไม้พร้อมปรับบทบาทเป็นหน่วยฝึกอบรม (Trainer) ให้แก่ชุดปฏิบัติการของ อปท. กว่า 3,000 เครือข่ายทั่วประเทศ'
+            },
+
+            // เสาหลักที่ 4: นวัตกรรมกลไกการเงินเพื่อสิ่งแวดล้อม (2 ข้อ)
+            {
+                id: 'add-p4-1',
+                category: 'pillar4',
+                priority: 'เร่งด่วนที่สุด (เสนอ ครม. พ.ย. 69)',
+                title: '[เสาหลัก 4.1] ออกพันธบัตรเชื่อมโยงความยั่งยืน (Sustainability Bond 1,000–5,000 ล้านบาท) คู่ขนานงบบูรณาการ Agenda-based PM2.5',
+                detail: '1) ให้ ครม. มีมติเพิ่ม "วาระการแก้ไขปัญหาฝุ่น PM2.5" เข้าเป็นหมวดงบประมาณบูรณาการ (Agenda-based) ตาม พ.ร.บ. วิธีการงบประมาณ พ.ศ. 2561 (เพิ่มเติมจาก 9 หมวดเดิม) เพื่อให้จัดสรรงบข้ามฟังก์ชันได้โดยไม่ต้องแก้กฎหมาย\n2) ให้สำนักงานบริหารหนี้สาธารณะ (สบน.) กระทรวงการคลัง ออกพันธบัตรส่งเสริมความยั่งยืน (Sustainability-Linked Bond / Green Bond) วงเงิน 1,000 – 5,000 ล้านบาท เพื่อระดมทุนจากนักลงทุนสถาบันด้าน ESG มาใช้ในโครงการจัดการฝุ่นและไฟป่าโดยไม่ต้องรองบกลางที่ล่าช้า',
+                agencies: 'ครม., กค. (สบน.), สงป., บพท.',
+                ref: 'เสาหลักที่ 4 ข้อเสนอต่อรองนายกฯ (16 ก.ย. 69)',
+                response: 'ผู้แทน สบน. ยืนยันในเวที 16 ก.ย. 69 ว่าตลาดมีความต้องการซื้อ Sustainability Bond สูงถึง 42,000 ล้านบาท (จากที่เคยเปิดขาย 1,500 ล้านบาท) และสามารถดำเนินการคู่ขนานกับงบบูรณาการ Agenda-based ได้ทันที'
+            },
+            {
+                id: 'add-p4-2',
+                category: 'pillar4',
+                priority: 'เร่งด่วน',
+                title: '[เสาหลัก 4.2] แก้ไขระเบียบ BOI ให้รับรอง "คณะกรรมการป่าชุมชน" รับเงินสนับสนุนตรงจากเอกชน และตั้งกลไกระดมทุนเมืองช่วยป่า (PES / Carbon Credit Tier 3)',
+                detail: '1) ให้ BOI แก้ไขระเบียบมาตรการส่งเสริมการลงทุนเพื่อสังคมและชุมชน จากเดิมที่รับรองเฉพาะ อบต. ให้รับรอง "คณะกรรมการป่าชุมชน" เป็นผู้รับการสนับสนุนได้โดยตรง และขยายขอบเขตจากเรื่องไฟป่าให้ครอบคลุม "การจัดการฝุ่น PM2.5 และมลพิษทางอากาศ"\n2) พัฒนากลไกการจ่ายค่าตอบแทนบริการทางระบบนิเวศ (PES) แบบมีค่าพื้นฐานบวกโบนัสตามผลงานการดูแลป่า (จับคู่พื้นที่ปลายฝุ่นในเมือง เช่น ร้านกาแฟ/โรงแรม กับชุมชนต้นฝุ่น) และยกระดับการวัดคาร์บอนเครดิตป่าไม้สู่ระดับ Tier 3 (ใช้ทาวเวอร์วัดคาร์บอนบนเสาโทรคมนาคมร่วมกับโดรนและ AI)',
+                agencies: 'BOI, กค., ทส., มท. (อบจ.), บพท., ภาคเอกชน',
+                ref: 'เสาหลักที่ 4 ข้อเสนอต่อรองนายกฯ (16 ก.ย. 69)',
+                response: 'อยู่ระหว่างการเจรจากับ BOI เพื่อขยายขอบเขตให้ครอบคลุม PM2.5 และปลดล็อกให้คณะกรรมการป่าชุมชนรับทุนได้โดยตรงโดยไม่ต้องรอ Sandbox เสร็จ'
+            },
+
+            // เสาหลักที่ 5: มิติด้านสิทธิมนุษยชน สุขภาพประชาชน และการจัดการฝุ่นข้ามแดน (2 ข้อ)
+            {
+                id: 'add-p5-1',
+                category: 'pillar5',
+                priority: 'เร่งด่วนที่สุด',
+                title: '[เสาหลัก 5.1] ปลดล็อกระเบียบกองทุนหลักประกันสุขภาพตำบล (สปสช.) และขยายผลนวัตกรรมเครื่องฟอกอากาศ DIY / ห้องแรงดันบวกต้นทุนต่ำ / ธนาคารเครื่องฟอกอากาศ',
+                detail: '1) ให้คณะกรรมการหลักประกันสุขภาพแห่งชาติ (สปสช.) และ มท. ปลดล็อกระเบียบกองทุนหลักประกันสุขภาพระดับตำบล (ที่มีงบเฉลี่ย 300,000 - 1,000,000 บาท/ตำบล) ให้ อปท. สามารถเบิกจ่ายเพื่อจัดซื้อหน้ากาก N95 มุ้งสู้ฝุ่น เครื่องฟอกอากาศต้นทุนต่ำ ห้องปลอดฝุ่นแรงดันบวก และอุปกรณ์ดับไฟสำรองแจกจ่ายแก่กลุ่มเปราะบางและศูนย์เด็กเล็กได้โดยตรง\n2) ขยายผลนวัตกรรมแผ่นกรอง Meltblown PP ขายปลีกราคาประหยัด (50 บาท/20 เมตร เช่น โครงการคุณสู้ฝุ่น) เพื่อประกอบเครื่องฟอกอากาศ DIY ต้นทุนเพียง 200-300 บาท/เครื่อง ห้องแรงดันบวกต้นทุน 400-3,600 บาท และขยายโมเดล "ธนาคารเครื่องฟอกอากาศ" หมุนเวียนอุปกรณ์ระหว่างภาคกลาง (พ.ย.-ม.ค.) กับภาคเหนือ (ม.ค.-เม.ย.)',
+                agencies: 'สธ. (สปสช.), มท. (อปท.), พม., สดร. (NARIT), สสส.',
+                ref: 'เสาหลักที่ 5 ข้อเสนอต่อรองนายกฯ (16 ก.ย. 69)',
+                response: 'รองนายกฯ สั่งการติดตั้งห้องปลอดฝุ่นแรงดันบวกครบวงจรนำร่องแล้ว 83 แห่ง และผู้แทนรองนายกฯ เห็นชอบให้เร่งหารือคณะกรรมการ สปสช. เพื่อปลดล็อกกองทุนสุขภาพตำบล'
+            },
+            {
+                id: 'add-p5-2',
+                category: 'pillar5',
+                priority: 'เร่งด่วนที่สุด',
+                title: '[เสาหลัก 5.2] บริหารจัดการแบบ “แอ่งอากาศ (Air Shed)” แจ้งเตือนล่วงหน้า 48 ชม. ยกระดับความร่วมมือประชาชนสองแผ่นดิน และทบทวนโควตาข้าวโพดภาษี 0%',
+                detail: '1) บริหารจัดการไฟและฝุ่นตามขอบเขต "แอ่งอากาศ" (Air Shed) ข้ามเขตการปกครองอำเภอ/จังหวัด พร้อมระบบพยากรณ์ทิศทางลมแจ้งเตือนมวลควันล่วงหน้า 48 ชั่วโมง\n2) รับรองและสนับสนุนงบประมาณแก่กลไก "ความร่วมมือระหว่างประชาชนสองแผ่นดิน" (People-to-People) เช่น หมู่บ้านคู่ขนานชายแดนแม่สะเรียง-แม่สอด (สนับสนุนครัวเรือนละ 15,000 บาท ผ่านหอการค้าจังหวัด/เอกชน) และการดูแลแนวกันไฟชายแดนปลูกพืชเศรษฐกิจทนไฟ (กล้วย กาแฟ) เช่น ภูชี้ฟ้า-ผาตั้ง อ.เวียงแก่น รวมถึงตั้ง จ.เชียงราย เป็น Hub ความร่วมมือลุ่มน้ำโขง\n3) ให้กระทรวงพาณิชย์ทบทวนประกาศกำหนดเวลานำเข้าข้าวโพดเลี้ยงสัตว์ภาษี 0% (1 ก.พ. - 31 ส.ค.) โดยให้หน่วยงานด้านสิ่งแวดล้อมและผู้ได้รับผลกระทบร่วมพิจารณา และปลดล็อกระเบียบการนำเข้าสินค้าป่าไม้ปลอดการเผา (น้ำผึ้ง งาดำ) จากชุมชนชายแดน',
+                agencies: 'กต., พณ., มท., ทส., จังหวัดชายแดน (เชียงราย/ตาก/แม่ฮ่องสอน)',
+                ref: 'เสาหลักที่ 5 ข้อเสนอต่อรองนายกฯ (16 ก.ย. 69)',
+                response: 'ที่ประชุม 16 ก.ย. 69 เห็นชอบให้ใช้ถ้อยคำ "ความร่วมมือระหว่างประชาชนสองแผ่นดิน" เพื่อเปิดช่องงบประมาณในปี 2570 และสนับสนุนบทบาท จ.เชียงราย เป็น Hub ความร่วมมือข้ามพรมแดน'
+            },
+
+            // หมวด C: มาตรการสิ่งที่ควรหยุดทำทันที (Stop-Doing Measures - 4 ข้อ)
+            {
+                id: 'add-s1',
+                category: 'stop',
+                priority: 'หยุดทำทันที',
+                title: '[สิ่งที่ต้องหยุดทำ 1] หยุดผลักภาระและตีตราให้ประชาชน/ชุมชนดั้งเดิมกลายเป็นจำเลยของสังคม',
+                detail: 'ยุติการสื่อสารและการบังคับใช้กฎหมายแบบเหมารวมที่กล่าวหาว่าชาวบ้านและกลุ่มชาติพันธุ์ในพื้นที่ป่าเป็นต้นเหตุของปัญหาฝุ่นควันทั้งหมด โดยเปลี่ยนจากการจับกุมดำเนินคดีที่ปลายเหตุ ไปสู่การเจรจา การใช้กระบวนการยุติธรรมเชิงสมานฉันท์ระดับชุมชน และการแก้ไขปัญหาเชิงโครงสร้างในห่วงโซ่อุปทานพืชเศรษฐกิจ',
+                agencies: 'ทุกหน่วยงานภาครัฐ, มท., ทส.',
+                ref: 'ชุดมาตรการที่ต้องหยุดทำทันที ข้อ 1 (ส่งมอบรองนายกฯ 16 ก.ย. 69)',
+                response: 'บรรจุในข้อสรุปร่วมของเวทีถอดบทเรียน 8 จังหวัดภาคเหนือ เพื่อปรับเปลี่ยนกระบวนทัศน์การทำงานของเจ้าหน้าที่รัฐ'
+            },
+            {
+                id: 'add-s2',
+                category: 'stop',
+                priority: 'หยุดทำทันที',
+                title: '[สิ่งที่ต้องหยุดทำ 2] หยุดประกาศมาตรการ “ห้ามเผาเด็ดขาดแบบเหมารวม” (Blanket Zero Burning)',
+                detail: 'ยกเลิกการออกคำสั่งห้ามเผาเด็ดขาดแบบเหมารวมทุกพื้นที่และตลอดช่วงเวลา เพราะขัดต่อหลักนิเวศวิทยาของป่าผลัดใบและวิถีการผลิตในพื้นที่สูง อีกทั้งพิสูจน์แล้วว่าทำให้เกิดการลักลอบเผาในเวลากลางคืนเพื่อหลบดาวเทียม การใช้สารเคมีอันตรายแทนไฟ และการสะสมเชื้อเพลิงจนเกิดไฟป่าขนาดใหญ่ที่รุนแรงกว่าเดิมในเดือนเมษายน ให้เปลี่ยนเป็นประกาศ "ช่วงเวลาบริหารจัดการเชื้อเพลิงตามกติกา" แทน',
+                agencies: 'ครม., มท., ทส., กษ., ผู้ว่าราชการจังหวัด',
+                ref: 'ชุดมาตรการที่ต้องหยุดทำทันที ข้อ 2 (ส่งมอบรองนายกฯ 16 ก.ย. 69)',
+                response: 'รองนายกฯ และที่ประชุม Sandbox เห็นชอบการเปลี่ยนผ่านจาก Zero Burning สู่ Prescribed Burning ในพื้นที่นำร่อง'
+            },
+            {
+                id: 'add-s3',
+                category: 'stop',
+                priority: 'หยุดทำทันที',
+                title: '[สิ่งที่ต้องหยุดทำ 3] หยุดออกคำสั่งกำหนดช่วงเวลาห้ามเผาที่ขัดแย้งกันเองข้ามกระทรวง และหยุดยับยั้งแผนของจังหวัดกลางคัน',
+                detail: 'ยุติการออกประกาศกำหนดวันห้ามเผาที่ไม่ตรงกันระหว่างกระทรวงเกษตรและสหกรณ์ กรมป้องกันและบรรเทาสาธารณภัย กระทรวงมหาดไทย และกระทรวงทรัพยากรธรรมชาติและสิ่งแวดล้อม ซึ่งสร้างความสับสนแก่ผู้ปฏิบัติงานและประชาชนในพื้นที่ รวมถึงหยุดการที่ส่วนกลางสั่งยับยั้งแผนบริหารจัดการเชื้อเพลิงที่จังหวัดและชุมชนได้ตกลงร่วมกันไว้แล้วกลางคัน',
+                agencies: 'ครม., กษ., มท. (ปภ.), ทส.',
+                ref: 'ชุดมาตรการที่ต้องหยุดทำทันที ข้อ 3 (ส่งมอบรองนายกฯ 16 ก.ย. 69)',
+                response: 'บูรณาการเข้าสู่กลไก CEO Sandbox เพื่อให้จังหวัดใช้แผนและปฏิทินไฟชุดเดียวกันโดยส่วนกลางไม่แทรกแซงยับยั้งกลางคัน'
+            },
+            {
+                id: 'add-s4',
+                category: 'stop',
+                priority: 'หยุดทำทันที',
+                title: '[สิ่งที่ต้องหยุดทำ 4] หยุดการจัดอบรมเชิงสัญลักษณ์ในโรงแรม และการทำกิจกรรมอีเวนต์/พ่นละอองน้ำที่ไม่ได้ผลจริง',
+                detail: 'ยุติการใช้งบประมาณจัดสัมมนาหรืออบรมในห้องประชุมโรงแรมที่ได้เฉพาะผู้สมัครใจหน้าเดิมแต่ไม่เข้าถึงกลุ่มผู้จุดไฟจริง (ซึ่งทั่วประเทศมีกลุ่มเสี่ยงประมาณ 4,000 คนที่เชื่อมโยงกับปัญหาปากท้อง) รวมถึงหยุดกิจกรรมประชาสัมพันธ์เชิงสัญลักษณ์ เช่น การพ่นละอองน้ำในที่โล่งที่ไม่ได้ลดฝุ่นจริง หรือการจัดงานวิ่ง/ออกกำลังกายกลางแจ้งในช่วงวิกฤตฝุ่น แล้วเปลี่ยนงบประมาณไปใช้ฝึกปฏิบัติการจริงในพื้นที่และช่วยเหลือกลุ่มเสี่ยงโดยตรง',
+                agencies: 'ทุกหน่วยงานภาครัฐ, อปท., จังหวัด',
+                ref: 'ชุดมาตรการที่ต้องหยุดทำทันที ข้อ 4 และข้อเสนอภาคสาธารณสุข (15-16 ก.ย. 69)',
+                response: 'ที่ประชุมรับเป็นแนวปฏิบัติร่วมในการกลั่นกรองแผนงานและงบประมาณปี 2570'
+            }
+        ];
+
+        // Agency Dictionary
+        const agencyDict = {
+            'ทส.': { name: 'กระทรวงทรัพยากรธรรมชาติและสิ่งแวดล้อม (ทส.)', sub: 'กรมควบคุมมลพิษ (คพ.), กรมป่าไม้, กรมอุทยานฯ' },
+            'มท.': { name: 'กระทรวงมหาดไทย (มท.)', sub: 'กรมป้องกันและบรรเทาสาธารณภัย (ปภ.), กรมส่งเสริมการปกครองท้องถิ่น (สถ.), ผู้ว่าฯ, อปท.' },
+            'กษ.': { name: 'กระทรวงเกษตรและสหกรณ์ (กษ.)', sub: 'กรมส่งเสริมการเกษตร, กรมฝนหลวงฯ, สถาบันวิจัยและพัฒนาพื้นที่สูง' },
+            'อต.': { name: 'กระทรวงอุตสาหกรรม (อต.)', sub: 'กรมโรงงานอุตสาหกรรม (กรอ.), สอน., สมอ.' },
+            'คค.': { name: 'กระทรวงคมนาคม (คค.)', sub: 'กรมการขนส่งทางบก (ขบ.), ขสมก., บขส.' },
+            'ดศ.': { name: 'กระทรวงดิจิทัลเพื่อเศรษฐกิจและสังคม (ดศ.)', sub: 'กรมอุตุนิยมวิทยา, สถาบันข้อมูลขนาดใหญ่ (สขญ./BDI)' },
+            'พน.': { name: 'กระทรวงพลังงาน (พน.)', sub: 'กรมพัฒนาพลังงานทดแทนและอนุรักษ์พลังงาน (พพ.), กกพ.' },
+            'สธ.': { name: 'กระทรวงสาธารณสุข (สธ.) และ สปสช.', sub: 'กรมอนามัย, กรมควบคุมโรค, สำนักงานหลักประกันสุขภาพแห่งชาติ (สปสช.)' },
+            'ศธ.': { name: 'กระทรวงศึกษาธิการ (ศธ.)', sub: 'สพฐ., สอศ. (อาชีวศึกษา), สช.' },
+            'พม.': { name: 'กระทรวงการพัฒนาสังคมและความมั่นคงของมนุษย์ (พม.)', sub: 'ดูแลกลุ่มเปราะบาง (เด็กเล็ก ผู้สูงอายุ คนพิการ)' },
+            'กต.': { name: 'กระทรวงการต่างประเทศ (กต.)', sub: 'กรมอาเซียน, กรมความร่วมมือระหว่างประเทศ (TICA)' },
+            'พณ.': { name: 'กระทรวงพาณิชย์ (พณ.)', sub: 'กรมการค้าต่างประเทศ' },
+            'ก.พ.ร.': { name: 'ก.พ.ร. / สำนักงบประมาณ / กระทรวงการคลัง / คทช. / BOI', sub: 'สำนักงานบริหารหนี้สาธารณะ (สบน.), กรมบัญชีกลาง, สตง.' },
+            'ครม.': { name: 'รัฐบาล / คณะรัฐมนตรี / รัฐสภา / กระทรวง อว.', sub: 'รองนายกรัฐมนตรี, สดร. (NARIT), GISTDA, วช., บพท., สสส.' }
+        };
+
+        // App State
+        let baselineList = [];
+        let additionalList = [];
+        let selectedAgencyKey = 'ทส.';
+        let currentTab3Category = 'all';
+
+        // Initialize
+        window.addEventListener('DOMContentLoaded', () => {
+            loadState();
+            refreshAllUI();
+        });
+
+        function loadState() {
+            try {
+                const b = localStorage.getItem(STORAGE_BASE_KEY);
+                const a = localStorage.getItem(STORAGE_ADD_KEY);
+                baselineList = b ? JSON.parse(b) : JSON.parse(JSON.stringify(initialBaselineData));
+                additionalList = a ? JSON.parse(a) : JSON.parse(JSON.stringify(initialAdditionalProposals));
+            } catch (err) {
+                baselineList = JSON.parse(JSON.stringify(initialBaselineData));
+                additionalList = JSON.parse(JSON.stringify(initialAdditionalProposals));
+            }
+        }
+
+        function saveState() {
+            try {
+                localStorage.setItem(STORAGE_BASE_KEY, JSON.stringify(baselineList));
+                localStorage.setItem(STORAGE_ADD_KEY, JSON.stringify(additionalList));
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        function refreshAllUI() {
+            updateSummaryKPIs();
+            renderTab1Baseline();
+            renderTab2Agencies();
+            renderTab3Proposals();
+            renderTab4Report();
+        }
+
+        // Switch Main Tabs
+        function switchTab(tabKey) {
+            ['tab1', 'tab2', 'tab3', 'tab4'].forEach(k => {
+                document.getElementById(`section-${k}`).classList.add('hidden');
+                const btn = document.getElementById(`btn-${k}`);
+                btn.classList.remove('border-gold-400', 'text-gold-400', 'bg-navy-900/60');
+                btn.classList.add('border-transparent', 'text-blue-200');
+            });
+            document.getElementById(`section-${tabKey}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`btn-${tabKey}`);
+            activeBtn.classList.remove('border-transparent', 'text-blue-200');
+            activeBtn.classList.add('border-gold-400', 'text-gold-400', 'bg-navy-900/60');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Update Top KPIs
+        function updateSummaryKPIs() {
+            const totalBase = baselineList.length;
+            const doneBase = baselineList.filter(i => i.status === 'good' || i.status === 'partial').length;
+            const totalGaps = baselineList.reduce((acc, item) => acc + item.gaps.length, 0);
+
+            const totalAdd = additionalList.length;
+            const reitCount = additionalList.filter(i => i.category === 'reiterated').length;
+            const stopCount = additionalList.filter(i => i.category === 'stop').length;
+            const newPillarCount = totalAdd - reitCount - stopCount;
+
+            document.getElementById('kpi-base-total').textContent = `${totalBase} ข้อ`;
+            document.getElementById('kpi-base-done').textContent = `${doneBase} ข้อ`;
+            document.getElementById('kpi-base-gaps').textContent = `${totalGaps} ประเด็น`;
+
+            document.getElementById('kpi-add-total').textContent = `${totalAdd} ข้อ`;
+            document.getElementById('kpi-add-reit').textContent = reitCount;
+            document.getElementById('kpi-add-new').textContent = newPillarCount;
+            document.getElementById('kpi-add-stop').textContent = stopCount;
+
+            document.getElementById('nav-badge-base').textContent = totalBase;
+            document.getElementById('nav-badge-add').textContent = totalAdd;
+
+            document.getElementById('t3-cnt-all').textContent = totalAdd;
+            document.getElementById('t3-cnt-reit').textContent = reitCount;
+            document.getElementById('t3-cnt-stop').textContent = stopCount;
+        }
+
+        // =========================================================
+        // RENDER TAB 1: BASELINE ITEMS
+        // =========================================================
+        function renderTab1Baseline() {
+            const q = document.getElementById('t1-search').value.toLowerCase().trim();
+            const yearF = document.getElementById('t1-year').value;
+            const agencyF = document.getElementById('t1-agency').value;
+            const statusF = document.getElementById('t1-status').value;
+
+            const filtered = baselineList.filter(item => {
+                if (yearF !== 'all' && item.year !== yearF) return false;
+                if (statusF !== 'all' && item.status !== statusF) return false;
+                if (agencyF !== 'all' && !item.agencies.includes(agencyF)) return false;
+                if (q) {
+                    const text = `${item.code} ${item.title} ${item.recommendation} ${item.done.join(' ')} ${item.gaps.join(' ')} ${item.agencies.join(' ')}`.toLowerCase();
+                    if (!text.includes(q)) return false;
+                }
+                return true;
+            });
+
+            const container = document.getElementById('t1-baseline-list');
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="bg-white rounded-xl p-10 text-center border border-slate-200">
+                        <i class="fa-solid fa-magnifying-glass text-3xl text-slate-300 mb-2"></i>
+                        <p class="font-bold text-slate-700">ไม่พบรายการที่ตรงกับเงื่อนไขการกรอง</p>
+                        <button onclick="resetTab1Filters()" class="mt-3 text-xs bg-navy-900 text-gold-400 font-bold px-4 py-2 rounded-lg">แสดงทั้งหมด</button>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filtered.map(item => {
+                const statusBadge = getBaselineStatusBadge(item.status);
+                const yearPill = item.year === '2568'
+                    ? `<span class="bg-navy-900 text-gold-400 text-xs font-bold px-2.5 py-1 rounded">ข้อเสนอปี 2568</span>`
+                    : `<span class="bg-blue-800 text-white text-xs font-bold px-2.5 py-1 rounded">ข้อเสนอปี 2566 (8 จว.เหนือ)</span>`;
+
+                const agencyBadges = item.agencies.map(ag =>
+                    `<button onclick="jumpToAgencyTab('${ag}')" class="bg-navy-50 hover:bg-navy-100 text-navy-900 border border-navy-200 text-xs font-bold px-2.5 py-0.5 rounded-full transition">${ag}</button>`
+                ).join('');
+
+                const doneListHtml = item.done.map(d =>
+                    `<li class="flex items-start gap-2 text-xs sm:text-sm text-slate-800 leading-relaxed">
+                        <i class="fa-solid fa-circle-check text-emerald-600 mt-1 shrink-0"></i>
+                        <span>${d}</span>
+                    </li>`
+                ).join('');
+
+                const gapsListHtml = item.gaps.map(g =>
+                    `<li class="flex items-start gap-2 text-xs sm:text-sm text-slate-800 leading-relaxed">
+                        <i class="fa-solid fa-circle-exclamation text-rose-600 mt-1 shrink-0"></i>
+                        <span>${g}</span>
+                    </li>`
+                ).join('');
+
+                return `
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                        <!-- Top Bar -->
+                        <div class="bg-slate-50 px-5 py-4 border-b border-slate-200 flex flex-wrap items-start justify-between gap-4">
+                            <div class="space-y-1.5 max-w-4xl">
+                                <div class="flex flex-wrap items-center gap-2">
+                                    ${yearPill}
+                                    <span class="font-bold text-navy-950 text-sm bg-gold-200/70 px-2.5 py-0.5 rounded">${item.code}</span>
+                                    <span class="text-xs text-slate-500"><i class="fa-regular fa-file-pdf text-rose-500 mr-1"></i>${item.docRef}</span>
+                                    <div class="flex flex-wrap gap-1">${agencyBadges}</div>
+                                </div>
+                                <h3 class="text-lg font-bold text-navy-950 leading-snug">${item.title}</h3>
+                                <div class="text-xs text-slate-700 bg-white p-2.5 rounded-lg border border-slate-200">
+                                    <strong class="text-navy-900">ข้อเสนอแนะของ กสม.:</strong> ${item.recommendation}
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col items-end gap-2 shrink-0">
+                                ${statusBadge}
+                                <div class="flex items-center gap-2 mt-1">
+                                    <button onclick="openBaselineModal('${item.id}')" class="text-xs bg-white hover:bg-slate-100 text-navy-900 border border-slate-300 font-bold px-3 py-1.5 rounded-lg transition flex items-center gap-1.5">
+                                        <i class="fa-solid fa-pen-to-square text-gold-600"></i> แก้ไข/อัปเดตผล
+                                    </button>
+                                    <button onclick="promoteGapToReiterated('${item.id}')" class="text-xs bg-gold-500 hover:bg-gold-400 text-navy-950 font-bold px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 shadow-2xs">
+                                        <i class="fa-solid fa-share-from-square"></i> นำช่องว่างไปสร้างข้อเสนอย้ำ
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 2-Column Body: Done vs Gaps -->
+                        <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+                            <!-- Left: Done -->
+                            <div class="p-5 bg-emerald-50/15">
+                                <div class="flex items-center justify-between mb-3">
+                                    <h4 class="text-sm font-bold text-emerald-950 flex items-center gap-2">
+                                        <span class="w-6 h-6 rounded-md bg-emerald-600 text-white flex items-center justify-center text-xs"><i class="fa-solid fa-check"></i></span>
+                                        ใครทำอะไรไปแล้ว (รายงานผลการดำเนินการต่อ ครม. ปี 69)
+                                    </h4>
+                                    <span class="text-xs font-bold text-emerald-800 bg-emerald-100 px-2.5 py-0.5 rounded-full">คืบหน้า ~${item.progress}%</span>
+                                </div>
+                                <ul class="space-y-2.5">
+                                    ${doneListHtml}
+                                </ul>
+                            </div>
+
+                            <!-- Right: Gaps -->
+                            <div class="p-5 bg-rose-50/20">
+                                <div class="flex items-center justify-between mb-3">
+                                    <h4 class="text-sm font-bold text-rose-950 flex items-center gap-2">
+                                        <span class="w-6 h-6 rounded-md bg-rose-600 text-white flex items-center justify-center text-xs"><i class="fa-solid fa-xmark"></i></span>
+                                        สิ่งที่ยังไม่ได้ทำ / ช่องว่างจากการตรวจติดตามและเวที มช. (15-16 ก.ย. 69)
+                                    </h4>
+                                    <span class="text-xs font-bold text-rose-800 bg-rose-100 px-2.5 py-0.5 rounded-full">พบ ${item.gaps.length} ช่องว่าง</span>
+                                </div>
+                                <ul class="space-y-2.5">
+                                    ${gapsListHtml}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function getBaselineStatusBadge(status) {
+            if (status === 'good') {
+                return `<span class="inline-flex items-center gap-1.5 bg-emerald-100 text-emerald-900 border border-emerald-300 text-xs font-bold px-3 py-1 rounded-full">
+                    <span class="w-2 h-2 rounded-full bg-emerald-600"></span> ก้าวหน้าชัดเจน (ต้องขยายผลต่อเนื่อง)
+                </span>`;
+            } else if (status === 'partial') {
+                return `<span class="inline-flex items-center gap-1.5 bg-amber-100 text-amber-900 border border-amber-300 text-xs font-bold px-3 py-1 rounded-full">
+                    <span class="w-2 h-2 rounded-full bg-amber-500"></span> ดำเนินการบางส่วน (ยังมีช่องว่างสำคัญ)
+                </span>`;
+            } else {
+                return `<span class="inline-flex items-center gap-1.5 bg-rose-100 text-rose-900 border border-rose-300 text-xs font-bold px-3 py-1 rounded-full">
+                    <span class="w-2 h-2 rounded-full bg-rose-600"></span> ติดคอขวดเชิงโครงสร้าง / ต้องย้ำเร่งด่วน
+                </span>`;
+            }
+        }
+
+        function resetTab1Filters() {
+            document.getElementById('t1-search').value = '';
+            document.getElementById('t1-year').value = 'all';
+            document.getElementById('t1-agency').value = 'all';
+            document.getElementById('t1-status').value = 'all';
+            renderTab1Baseline();
+        }
+
+        // =========================================================
+        // RENDER TAB 2: AGENCY MATRIX
+        // =========================================================
+        function jumpToAgencyTab(agencyKey) {
+            selectedAgencyKey = agencyKey;
+            switchTab('tab2');
+            renderTab2Agencies();
+        }
+
+        function renderTab2Agencies() {
+            const pillsContainer = document.getElementById('t2-agency-pills');
+            pillsContainer.innerHTML = Object.keys(agencyDict).map(key => {
+                const count = baselineList.filter(i => i.agencies.includes(key)).length;
+                const isSelected = key === selectedAgencyKey;
+                const btnClass = isSelected
+                    ? 'bg-navy-900 text-gold-400 border-navy-900 shadow-sm font-bold'
+                    : 'bg-slate-50 text-slate-700 border-slate-300 hover:bg-navy-50 font-semibold';
+
+                return `
+                    <button onclick="selectAgency('${key}')" class="px-3.5 py-2 rounded-xl border text-xs sm:text-sm transition flex items-center gap-2 ${btnClass}">
+                        <span>${key}</span>
+                        <span class="text-xs px-1.5 py-0.2 rounded-full ${isSelected ? 'bg-gold-500 text-navy-950 font-bold' : 'bg-slate-200 text-slate-700'}">${count}</span>
+                    </button>
+                `;
+            }).join('');
+
+            const detailContainer = document.getElementById('t2-agency-detail');
+            const info = agencyDict[selectedAgencyKey];
+            const relatedBaseline = baselineList.filter(i => i.agencies.includes(selectedAgencyKey));
+            const relatedAdditional = additionalList.filter(a => a.agencies.includes(selectedAgencyKey.replace('.', '')));
+
+            let html = `
+                <div class="bg-navy-900 text-white rounded-2xl p-5 shadow-sm flex flex-wrap items-center justify-between gap-4">
+                    <div>
+                        <span class="text-xs text-gold-400 font-bold uppercase tracking-wider">สรุปภารกิจและความรับผิดชอบรายหน่วยงาน</span>
+                        <h3 class="text-xl sm:text-2xl font-bold mt-0.5">${info.name}</h3>
+                        <p class="text-xs sm:text-sm text-blue-200 mt-1">หน่วยงานในสังกัด/ที่เกี่ยวข้อง: ${info.sub}</p>
+                    </div>
+                    <div class="flex gap-3">
+                        <div class="bg-navy-800 border border-navy-700 px-4 py-2.5 rounded-xl text-center">
+                            <div class="text-2xl font-bold text-gold-400">${relatedBaseline.length}</div>
+                            <div class="text-xs text-blue-200">ข้อเสนอเดิมที่รับผิดชอบ</div>
+                        </div>
+                        <div class="bg-navy-800 border border-navy-700 px-4 py-2.5 rounded-xl text-center">
+                            <div class="text-2xl font-bold text-emerald-400">${relatedAdditional.length}</div>
+                            <div class="text-xs text-blue-200">ข้อเสนอเพิ่มเติมปี 69 ที่เกี่ยวข้อง</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            html += `<div class="space-y-4">`;
+            relatedBaseline.forEach(item => {
+                html += `
+                    <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-2xs space-y-3">
+                        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
+                            <div>
+                                <span class="bg-navy-900 text-gold-400 text-xs font-bold px-2.5 py-0.5 rounded mr-2">${item.code}</span>
+                                <span class="font-bold text-navy-950 text-base">${item.title}</span>
+                            </div>
+                            ${getBaselineStatusBadge(item.status)}
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-emerald-50/40 p-3.5 rounded-xl border border-emerald-200">
+                                <div class="text-xs font-bold text-emerald-900 mb-2"><i class="fa-solid fa-check-circle mr-1"></i> สิ่งที่ดำเนินการไปแล้ว:</div>
+                                <ul class="space-y-1.5 text-xs text-slate-700 list-disc pl-4">
+                                    ${item.done.map(d => `<li>${d}</li>`).join('')}
+                                </ul>
+                            </div>
+                            <div class="bg-rose-50/40 p-3.5 rounded-xl border border-rose-200">
+                                <div class="text-xs font-bold text-rose-900 mb-2"><i class="fa-solid fa-triangle-exclamation mr-1"></i> ช่องว่างที่ยังไม่ได้ทำ / ต้องเร่งรัด:</div>
+                                <ul class="space-y-1.5 text-xs text-slate-700 list-disc pl-4">
+                                    ${item.gaps.map(g => `<li>${g}</li>`).join('')}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            html += `</div>`;
+
+            detailContainer.innerHTML = html;
+        }
+
+        function selectAgency(key) {
+            selectedAgencyKey = key;
+            renderTab2Agencies();
+        }
+
+        // =========================================================
+        // RENDER TAB 3: ADDITIONAL PROPOSALS 2569
+        // =========================================================
+        function setTab3Filter(cat) {
+            currentTab3Category = cat;
+            const allBtns = ['all', 'reiterated', 'pillar1', 'pillar2', 'pillar3', 'pillar4', 'pillar5', 'stop'];
+            allBtns.forEach(k => {
+                const el = document.getElementById(`t3-filter-${k}`);
+                if (!el) return;
+                if (k === cat) {
+                    el.className = 'px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold bg-navy-900 text-gold-400 transition shadow-xs';
+                } else {
+                    el.className = 'px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition';
+                }
+            });
+            renderTab3Proposals();
+        }
+
+        function getCategoryMeta(cat) {
+            const map = {
+                reiterated: { label: 'หมวด A: ข้อเสนอย้ำสิ่งที่ยังไม่ทำ', badge: 'bg-amber-100 text-amber-950 border-amber-300', border: 'border-t-4 border-t-gold-500', icon: 'fa-repeat' },
+                pillar1: { label: 'เสาหลักที่ 1: ปฏิรูปโครงสร้าง & CEO Sandbox', badge: 'bg-navy-100 text-navy-900 border-navy-300', border: 'border-t-4 border-t-navy-800', icon: 'fa-sitemap' },
+                pillar2: { label: 'เสาหลักที่ 2: ข้อมูลเปิด (Open Data) & เทคโนโลยี AI', badge: 'bg-blue-100 text-blue-900 border-blue-300', border: 'border-t-4 border-t-blue-600', icon: 'fa-satellite-dish' },
+                pillar3: { label: 'เสาหลักที่ 3: ปฏิรูปเขตป่า สิทธิที่ดิน คทช. & ป่าชุมชน', badge: 'bg-emerald-100 text-emerald-900 border-emerald-300', border: 'border-t-4 border-t-emerald-600', icon: 'fa-tree' },
+                pillar4: { label: 'เสาหลักที่ 4: นวัตกรรมกลไกการเงินเพื่อสิ่งแวดล้อม', badge: 'bg-teal-100 text-teal-900 border-teal-300', border: 'border-t-4 border-t-teal-600', icon: 'fa-coins' },
+                pillar5: { label: 'เสาหลักที่ 5: สิทธิสุขภาพประชาชน & ฝุ่นข้ามแดน', badge: 'bg-indigo-100 text-indigo-900 border-indigo-300', border: 'border-t-4 border-t-indigo-600', icon: 'fa-heart-pulse' },
+                stop: { label: 'หมวด C: สิ่งที่ควรหยุดทำทันที (Stop-Doing)', badge: 'bg-rose-100 text-rose-900 border-rose-300', border: 'border-t-4 border-t-rose-600', icon: 'fa-ban' }
+            };
+            return map[cat] || map.pillar1;
+        }
+
+        function renderTab3Proposals() {
+            const container = document.getElementById('t3-proposals-list');
+            const filtered = additionalList.filter(item => {
+                if (currentTab3Category === 'all') return true;
+                return item.category === currentTab3Category;
+            });
+
+            container.innerHTML = filtered.map((item, index) => {
+                const meta = getCategoryMeta(item.category);
+                return `
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 ${meta.border} p-5 flex flex-col justify-between hover:shadow-md transition">
+                        <div class="space-y-3">
+                            <div class="flex flex-wrap items-center justify-between gap-2">
+                                <span class="text-xs font-bold px-2.5 py-1 rounded-full border ${meta.badge}">
+                                    <i class="fa-solid ${meta.icon} mr-1"></i> ${meta.label}
+                                </span>
+                                <div class="flex items-center gap-1.5">
+                                    <button onclick="openEditAdditionalModal('${item.id}')" class="text-xs bg-slate-100 hover:bg-navy-100 text-navy-900 font-semibold px-2.5 py-1 rounded transition">
+                                        <i class="fa-solid fa-pen"></i> แก้ไข
+                                    </button>
+                                    <button onclick="deleteAdditionalItem('${item.id}')" class="text-xs bg-rose-50 hover:bg-rose-100 text-rose-600 px-2 py-1 rounded transition" title="ลบรายการนี้">
+                                        <i class="fa-solid fa-trash-can"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <h3 class="text-base sm:text-lg font-bold text-navy-950 leading-snug">
+                                ${index + 1}. ${item.title}
+                            </h3>
+
+                            <div class="text-xs sm:text-sm text-slate-700 bg-slate-50 p-3.5 rounded-xl border border-slate-200 whitespace-pre-line leading-relaxed">
+                                ${item.detail}
+                            </div>
+
+                            ${item.response ? `
+                                <div class="bg-blue-50/70 border border-blue-200 rounded-xl p-3 text-xs text-navy-900">
+                                    <strong class="text-navy-950"><i class="fa-solid fa-comments text-gold-600 mr-1"></i> ผลการหารือรองนายกฯ / หน่วยงาน (16 ก.ย. 69):</strong>
+                                    <span class="text-slate-700 ml-1">${item.response}</span>
+                                </div>
+                            ` : ''}
+                        </div>
+
+                        <div class="mt-4 pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2 text-xs">
+                            <div>
+                                <span class="font-bold text-navy-900">หน่วยงานเป้าหมาย:</span>
+                                <span class="bg-gold-50 text-navy-950 border border-gold-300 font-semibold px-2 py-0.5 rounded ml-1">${item.agencies}</span>
+                            </div>
+                            <div class="text-slate-500 font-medium">
+                                <i class="fa-regular fa-clock mr-1"></i> ${item.priority}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // =========================================================
+        // RENDER TAB 4: OFFICIAL REPORT TABLES
+        // =========================================================
+        function renderTab4Report() {
+            const baseTbody = document.getElementById('t4-baseline-tbody');
+            baseTbody.innerHTML = baselineList.map(item => `
+                <tr class="border-b border-slate-300 align-top print-break-inside-avoid">
+                    <td class="border border-slate-300 p-2 font-bold text-navy-950">${item.code}<br><span class="text-[11px] font-normal text-slate-500">(${item.progress}%)</span></td>
+                    <td class="border border-slate-300 p-2">
+                        <div class="font-bold text-navy-950 mb-1">${item.title}</div>
+                        <div class="text-slate-600">${item.recommendation}</div>
+                    </td>
+                    <td class="border border-slate-300 p-2 font-bold text-navy-900">${item.agencies.join(', ')}</td>
+                    <td class="border border-slate-300 p-2">
+                        <ul class="list-disc pl-4 space-y-1">
+                            ${item.done.map(d => `<li>${d}</li>`).join('')}
+                        </ul>
+                    </td>
+                    <td class="border border-slate-300 p-2 bg-rose-50/20">
+                        <ul class="list-disc pl-4 space-y-1 text-rose-950">
+                            ${item.gaps.map(g => `<li>${g}</li>`).join('')}
+                        </ul>
+                    </td>
+                </tr>
+            `).join('');
+
+            const addTbody = document.getElementById('t4-additional-tbody');
+            addTbody.innerHTML = additionalList.map((item, idx) => {
+                const meta = getCategoryMeta(item.category);
+                return `
+                    <tr class="border-b border-slate-300 align-top print-break-inside-avoid">
+                        <td class="border border-slate-300 p-2 font-bold text-navy-950">
+                            ${meta.label}<br>
+                            <span class="text-[11px] font-normal text-slate-600">(${item.priority})</span>
+                        </td>
+                        <td class="border border-slate-300 p-2 font-bold text-navy-950">${idx + 1}. ${item.title}</td>
+                        <td class="border border-slate-300 p-2 whitespace-pre-line leading-relaxed">${item.detail}</td>
+                        <td class="border border-slate-300 p-2 font-bold text-navy-900">${item.agencies}</td>
+                        <td class="border border-slate-300 p-2 text-slate-700">${item.response || item.ref || '-'}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // =========================================================
+        // MODALS & CRUD ACTIONS
+        // =========================================================
+        function openBaselineModal(id) {
+            const item = baselineList.find(i => i.id === id);
+            if (!item) return;
+            document.getElementById('m-base-id').value = item.id;
+            document.getElementById('m-base-badge').textContent = `${item.code} (${item.docRef})`;
+            document.getElementById('m-base-title').textContent = item.title;
+            document.getElementById('m-base-status').value = item.status;
+            document.getElementById('m-base-progress').value = item.progress;
+            document.getElementById('m-base-done').value = item.done.join('\n');
+            document.getElementById('m-base-gaps').value = item.gaps.join('\n');
+            document.getElementById('modal-baseline').classList.remove('hidden');
+        }
+
+        function closeBaselineModal() {
+            document.getElementById('modal-baseline').classList.add('hidden');
+        }
+
+        function saveBaselineModal(e) {
+            e.preventDefault();
+            const id = document.getElementById('m-base-id').value;
+            const item = baselineList.find(i => i.id === id);
+            if (!item) return;
+
+            item.status = document.getElementById('m-base-status').value;
+            item.progress = parseInt(document.getElementById('m-base-progress').value, 10) || 0;
+            item.done = document.getElementById('m-base-done').value.split('\n').map(s => s.trim()).filter(Boolean);
+            item.gaps = document.getElementById('m-base-gaps').value.split('\n').map(s => s.trim()).filter(Boolean);
+
+            saveState();
+            refreshAllUI();
+            closeBaselineModal();
+            showToast('บันทึกผลการติดตามเรียบร้อยแล้ว');
+        }
+
+        function promoteGapToReiterated(id) {
+            const item = baselineList.find(i => i.id === id);
+            if (!item) return;
+
+            document.getElementById('m-add-id').value = '';
+            document.getElementById('m-add-header').textContent = 'สร้างข้อเสนอย้ำจากช่องว่างที่ยังไม่ได้ทำ';
+            document.getElementById('m-add-category').value = 'reiterated';
+            document.getElementById('m-add-priority').value = 'เร่งด่วนที่สุด';
+            document.getElementById('m-add-title').value = `ย้ำการดำเนินการเรื่อง: ${item.title}`;
+            document.getElementById('m-add-detail').value = `จากผลการตรวจติดตามพบช่องว่างที่ยังดำเนินการไม่ครบถ้วน จึงขอเสนอแนะย้ำให้ดำเนินการ ดังนี้:\n- ${item.gaps.join('\n- ')}`;
+            document.getElementById('m-add-agencies').value = item.agencies.join(', ');
+            document.getElementById('m-add-ref').value = `อ้างอิง ${item.code} (${item.docRef})`;
+            document.getElementById('m-add-response').value = '';
+
+            document.getElementById('modal-additional').classList.remove('hidden');
+        }
+
+        function openAdditionalModal(type = 'reiterated') {
+            document.getElementById('m-add-id').value = '';
+            document.getElementById('m-add-header').textContent = 'เพิ่มข้อเสนอแนะฉบับเพิ่มเติม (ปี 2569)';
+            document.getElementById('m-add-category').value = type === 'pillar' ? 'pillar1' : type;
+            document.getElementById('m-add-priority').value = type === 'stop' ? 'หยุดทำทันที' : 'เร่งด่วนที่สุด';
+            document.getElementById('m-add-title').value = '';
+            document.getElementById('m-add-detail').value = '';
+            document.getElementById('m-add-agencies').value = '';
+            document.getElementById('m-add-ref').value = 'ข้อเสนอแนะเพิ่มเติม พ.ศ. 2569';
+            document.getElementById('m-add-response').value = '';
+
+            document.getElementById('modal-additional').classList.remove('hidden');
+        }
+
+        function openEditAdditionalModal(id) {
+            const item = additionalList.find(i => i.id === id);
+            if (!item) return;
+
+            document.getElementById('m-add-id').value = item.id;
+            document.getElementById('m-add-header').textContent = 'แก้ไขข้อเสนอแนะฉบับเพิ่มเติม';
+            document.getElementById('m-add-category').value = item.category;
+            document.getElementById('m-add-priority').value = item.priority;
+            document.getElementById('m-add-title').value = item.title;
+            document.getElementById('m-add-detail').value = item.detail;
+            document.getElementById('m-add-agencies').value = item.agencies;
+            document.getElementById('m-add-ref').value = item.ref || '';
+            document.getElementById('m-add-response').value = item.response || '';
+
+            document.getElementById('modal-additional').classList.remove('hidden');
+        }
+
+        function closeAdditionalModal() {
+            document.getElementById('modal-additional').classList.add('hidden');
+        }
+
+        function saveAdditionalModal(e) {
+            e.preventDefault();
+            const id = document.getElementById('m-add-id').value;
+            const obj = {
+                id: id || 'add-' + Date.now(),
+                category: document.getElementById('m-add-category').value,
+                priority: document.getElementById('m-add-priority').value.trim() || 'เร่งด่วน',
+                title: document.getElementById('m-add-title').value.trim(),
+                detail: document.getElementById('m-add-detail').value.trim(),
+                agencies: document.getElementById('m-add-agencies').value.trim(),
+                ref: document.getElementById('m-add-ref').value.trim(),
+                response: document.getElementById('m-add-response').value.trim()
+            };
+
+            if (id) {
+                const idx = additionalList.findIndex(i => i.id === id);
+                if (idx > -1) additionalList[idx] = obj;
+            } else {
+                additionalList.unshift(obj);
+            }
+
+            saveState();
+            refreshAllUI();
+            closeAdditionalModal();
+            switchTab('tab3');
+            showToast('บันทึกข้อเสนอแนะเพิ่มเติมเรียบร้อยแล้ว');
+        }
+
+        function deleteAdditionalItem(id) {
+ if(!confirm('ต้องการลบข้อเสนอแนะรายการนี้หรือไม่?')) return;
+            additionalList = additionalList.filter(i => i.id !== id);
+            saveState();
+            refreshAllUI();
+            showToast('ลบรายการข้อเสนอแนะแล้ว');
+        }
+
+        function resetSystemData() {
+ if(!confirm('คืนค่าข้อมูลเริ่มต้น? การแก้ไขที่บันทึกไว้จะถูกแทนที่')) return;
+            baselineList = JSON.parse(JSON.stringify(initialBaselineData));
+            additionalList = JSON.parse(JSON.stringify(initialAdditionalProposals));
+            saveState();
+            resetTab1Filters();
+            refreshAllUI();
+            showToast('คืนค่าฐานข้อมูลเริ่มต้นจากเอกสารทั้ง 6 ฉบับเรียบร้อยแล้ว');
+        }
+
+        // Export CSV
+        function exportAllToCSV() {
+            let csv = '\uFEFF';
+            csv += 'ประเภทเอกสาร,รหัส/หมวดหมู่,หัวข้อข้อเสนอแนะ,หน่วยงานรับผิดชอบ,สิ่งที่ทำไปแล้ว/การตอบรับ,สิ่งที่ยังไม่ได้ทำ/รายละเอียดข้อเสนอแนะใหม่,สถานะ/ความเร่งด่วน\n';
+
+            baselineList.forEach(item => {
+                const row = [
+                    `"ข้อเสนอตั้งต้น ปี ${item.year}"`,
+                    `"${item.code}"`,
+                    `"${item.title.replace(/"/g, '""')}"`,
+                    `"${item.agencies.join(', ')}"`,
+                    `"${item.done.join(' | ').replace(/"/g, '""')}"`,
+                    `"${item.gaps.join(' | ').replace(/"/g, '""')}"`,
+                    `"คืบหน้า ${item.progress}%"`
+                ];
+                csv += row.join(',') + '\n';
+            });
+
+            additionalList.forEach((item, idx) => {
+                const meta = getCategoryMeta(item.category);
+                const row = [
+                    `"ข้อเสนอฉบับเพิ่มเติม ปี 2569"`,
+                    `"${meta.label}"`,
+                    `"${(idx + 1) + '. ' + item.title.replace(/"/g, '""')}"`,
+                    `"${item.agencies.replace(/"/g, '""')}"`,
+                    `"${(item.response || item.ref || '').replace(/"/g, '""')}"`,
+                    `"${item.detail.replace(/"/g, '""').replace(/\n/g, ' ')}"`,
+                    `"${item.priority.replace(/"/g, '""')}"`
+                ];
+                csv += row.join(',') + '\n';
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'NHRCT_PM25_Policy_Tracking_2569.csv';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            showToast('ส่งออกไฟล์ CSV เรียบร้อยแล้ว');
+        }
+
+        // Copy Official Report Text
+        function copyOfficialReportText() {
+            let txt = 'รายงานผลการติดตามการดำเนินการตามข้อเสนอแนะของคณะกรรมการสิทธิมนุษยชนแห่งชาติ (กสม.) ต่อการแก้ไขปัญหาฝุ่น PM2.5 และข้อเสนอแนะเพิ่มเติม (พ.ศ. 2569)\n';
+            txt += '==================================================================================\n\n';
+            txt += 'ส่วนที่ 1: ผลการดำเนินการตามข้อเสนอแนะเดิม (ทำอะไรไปแล้ว vs สิ่งที่ยังไม่ได้ทำ)\n';
+
+            baselineList.forEach(item => {
+                txt += `\n■ ${item.code}: ${item.title} [หน่วยงาน: ${item.agencies.join(', ')}]\n`;
+                txt += `  • สิ่งที่ทำไปแล้ว:\n    - ${item.done.join('\n    - ')}\n`;
+                txt += `  • สิ่งที่ยังไม่ได้ทำ / ช่องว่าง (Gaps):\n    - ${item.gaps.join('\n    - ')}\n`;
+            });
+
+            txt += '\n==================================================================================\n';
+            txt += 'ส่วนที่ 2: ข้อเสนอแนะฉบับเพิ่มเติม พ.ศ. 2569\n';
+
+            additionalList.forEach((item, idx) => {
+                const meta = getCategoryMeta(item.category);
+                txt += `\n${idx + 1}. [${meta.label}] ${item.title}\n`;
+                txt += `   - หน่วยงานเป้าหมาย: ${item.agencies} (${item.priority})\n`;
+                txt += `   - รายละเอียดข้อเสนอ: ${item.detail}\n`;
+                if (item.response) txt += `   - ผลการหารือรองนายกฯ/หน่วยงาน (16 ก.ย. 69): ${item.response}\n`;
+            });
+
+            const ta = document.createElement('textarea');
+            ta.value = txt;
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+            showToast('คัดลอกเนื้อหารายงานทั้งหมดลงในคลิปบอร์ดแล้ว');
+        }
+
+        function showToast(msg) {
+            const box = document.getElementById('toast-box');
+            document.getElementById('toast-text').textContent = msg;
+            box.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-2');
+            box.classList.add('opacity-100', 'translate-y-0');
+            setTimeout(() => {
+                box.classList.add('opacity-0', 'pointer-events-none', 'translate-y-2');
+                box.classList.remove('opacity-100', 'translate-y-0');
+            }, 3000);
+        }
+    </script>
+<script>
+window.addEventListener('storage', () => {loadState();refreshAllUI();});
+document.addEventListener('keydown', e => {if(e.key==='Escape'){closeBaselineModal();closeAdditionalModal();}});
+document.querySelectorAll('button[onclick^="close"]').forEach(b=>b.setAttribute('aria-label','ปิดหน้าต่าง'));
+</script></body>
+</html>
+
